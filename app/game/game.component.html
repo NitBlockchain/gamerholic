@@ -1,0 +1,179 @@
+<ActionBar title="Bottombar" backgroundColor="#0D0D12">
+	<StackLayout orientation="vertical">
+		<!-- Header Start -->
+		<Label horizontalAlignment="center" letterSpacing="0.2">
+			<FormattedString>
+				<Span color="#F1A110" fontSize="24" fontWeight="bold" text="GAMER"></Span>
+				<Span color="#fff" fontSize="21" fontWeight="normal" text="HOLIC"></Span>
+			</FormattedString>
+		</Label>
+		<!-- Header End -->
+	</StackLayout>
+</ActionBar>
+
+<GridLayout rows="*,auto" backgroundColor="#0F2832">
+
+  <StackLayout row="0">
+	    <ScrollView>
+				<GridLayout rows="*,*" columns="*" *ngIf="DGAME">
+
+					<StackLayout row="1" paddingTop="33" *ngIf="DGAME.player1==user">
+						<StackLayout>
+							<Image src="{{DGAME.details.p2Avatar}}" height="140" width="140" borderRadius="70" class="avatar-image"
+									margin="20 10" horizontalAlignment="center"></Image>
+
+						</StackLayout>
+						<StackLayout>
+							<Label text="opponent" class="tL"></Label>
+						</StackLayout>
+						<StackLayout>
+							<Label text="{{DGAME.details.p2}}" class="tDEC"></Label>
+						</StackLayout>
+						<StackLayout>
+							<Label text="game" class="tL"></Label>
+						</StackLayout>
+						<StackLayout>
+							<Label text="{{DGAME.details.game}}" class="tDEC"></Label>
+						</StackLayout>
+						<StackLayout>
+							<Label text="amount" class="tL"></Label>
+						</StackLayout>
+						<StackLayout>
+							<Label text="${{DGAME.details.amountUSD}} | {{DGAME.details.amountBTC}} BTC" class="tDEC"></Label>
+						</StackLayout>
+
+						<StackLayout>
+							<Label text="rules" class="tL"></Label>
+						</StackLayout>
+						<StackLayout>
+							<Label text="{{DGAME.details.rules}}" class="tDEC" textWrap="true"  width="90%"></Label>
+						</StackLayout>
+						<StackLayout>
+							<Label text="refereee" class="tL"></Label>
+						</StackLayout>
+						<StackLayout>
+							<Label text="{{DGAME.details.refName || 'N/A'}}" class="tDEC" textWrap="true"  width="90%"></Label>
+						</StackLayout>
+
+						<StackLayout  *ngIf="DGAME.details.p2Accepted<1" paddingTop="33">
+								<Label height="50" width="90%" class="skeleton-light tC" borderRadius="5" text="your opponent has yet to accept the challenge"></Label>
+						</StackLayout>
+
+						<StackLayout  *ngIf="DGAME.details.p2Accepted>0 && DGAME.details.scoredBy==0" paddingTop="33">
+								<Label height="50" width="90%" class="skeleton-light tC" borderRadius="5" text="challenge accepted, go to your console and play your game, if you need a referre for your game, click here"></Label>
+						</StackLayout>
+						<StackLayout  *ngIf="DGAME.details.p2Accepted>0 && DGAME.details.scoredBy!=0" paddingTop="33">
+								<Label height="50" width="90%" class="skeleton-light tC" borderRadius="5" text="Winner: {{DGAME.details.winner}}"></Label>
+						</StackLayout>
+
+						<StackLayout *ngIf="DGAME.details.p2Accepted>0 &&  DGAME.details.scoredBy==0 && DGAME.active>0" paddingTop="33">
+							<Button text="score game" class="PB" (tap)="onScore()"></Button>
+						</StackLayout>
+						<StackLayout *ngIf="DGAME.details.p2Accepted>0 && DGAME.active>0 && DGAME.details.scoredBy!=0 && DGAME.details.scoredBy!=user" paddingTop="33">
+							<GridLayout rows="*" columns="*,*">
+								<StackLayout row="0" column="0">
+									<Button text="confirm" class="PB" (tap)="scoreAccept(1)"></Button>
+
+								</StackLayout>
+								<StackLayout row="0" column="1">
+									<Button text="reject" class="CGB" (tap)="scoreAccept(2)"></Button>
+
+								</StackLayout>
+							</GridLayout>
+						</StackLayout>
+						<StackLayout *ngIf="DGAME.details.p2Accepted>0 &&  DGAME.details.scoredBy!=0 && DGAME.details.scoredBy==user" paddingTop="33">
+							<Label height="50" width="90%" class="skeleton-light tC" borderRadius="5" text="waiting for your opponent to confirm the score"></Label>
+						</StackLayout>
+						<StackLayout *ngIf="DGAME.details.p2Accepted<1 && DGAME.active>0" paddingTop="33">
+							<Button text="cancel game" class="PB" (tap)="onCancel(1)"></Button>
+						</StackLayout>
+						<StackLayout *ngIf="DGAME.active<1" paddingTop="33">
+							<Label height="50" width="90%" class="skeleton-light tC" borderRadius="5" text="game canceled"></Label>
+						</StackLayout>
+
+					</StackLayout>
+
+					<StackLayout row="1" paddingTop="33" *ngIf="DGAME.player2==user">
+						<StackLayout>
+							<Image src="{{DGAME.details.p1Avatar}}" height="140" width="140" borderRadius="70" class="avatar-image"
+									horizontalAlignment="center"></Image>
+
+						</StackLayout>
+						<StackLayout>
+							<Label text="opponent" class="tL"></Label>
+						</StackLayout>
+						<StackLayout>
+							<Label text="{{DGAME.details.p1}}" class="tDEC"></Label>
+						</StackLayout>
+						<StackLayout>
+							<Label text="game" class="tL"></Label>
+						</StackLayout>
+						<StackLayout>
+							<Label text="{{DGAME.details.game}}" class="tDEC"></Label>
+						</StackLayout>
+						<StackLayout>
+							<Label text="amount" class="tL"></Label>
+						</StackLayout>
+						<StackLayout>
+							<Label text="${{DGAME.details.amountUSD}} | {{DGAME.details.amountBTC}} BTC" class="tDEC"></Label>
+						</StackLayout>
+
+						<StackLayout>
+							<Label text="rules" class="tL"></Label>
+						</StackLayout>
+						<StackLayout>
+							<Label text="{{DGAME.details.rules}}" class="tDEC" textWrap="true"  width="90%"></Label>
+						</StackLayout>
+						<StackLayout>
+							<Label text="refereee" class="tL"></Label>
+						</StackLayout>
+						<StackLayout>
+							<Label text="{{DGAME.details.refName || 'N/A'}}" class="tDEC" textWrap="true"  width="90%"></Label>
+						</StackLayout>
+						<StackLayout column="0" paddingTop="13" *ngIf="DGAME.details.p2Accepted<1 && DGAME.active>0">
+							<Label height="50" width="90%" class="skeleton-light tC" borderRadius="5" textWrap="true" text="waiting on you to accept the challenge"></Label>
+						</StackLayout>
+						<StackLayout *ngIf="DGAME.active<1" paddingTop="33">
+							<Label height="50" width="90%" class="skeleton-light tC" borderRadius="5" text="game canceled"></Label>
+						</StackLayout>
+						<StackLayout  *ngIf="DGAME.details.p2Accepted>0  && DGAME.active>0 &&  DGAME.details.scoredBy==0" paddingTop="33">
+								<Label height="50" width="90%" class="skeleton-light tC" borderRadius="5" text="challenge accepted, go to your console and play your game, if you need a referre for your game, click here"></Label>
+						</StackLayout>
+						<StackLayout  *ngIf="DGAME.details.p2Accepted>0 && DGAME.details.scoredBy!=0 && DGAME.active>0" paddingTop="33">
+								<Label height="50" width="90%" class="skeleton-light tC" borderRadius="5" text="Winner: {{DGAME.details.winner}}"></Label>
+						</StackLayout>
+						<StackLayout *ngIf="DGAME.details.p2Accepted>0 && DGAME.active>0 && DGAME.details.scoredBy!=0 && DGAME.details.scoredBy!=user" paddingTop="33">
+							<GridLayout rows="*" columns="*,*">
+								<StackLayout row="0" column="0">
+									<Button text="confirm" class="PB" (tap)="scoreAccept(1)"></Button>
+
+								</StackLayout>
+								<StackLayout row="0" column="1">
+									<Button text="reject" class="CGB" (tap)="scoreAccept(2)"></Button>
+
+								</StackLayout>
+							</GridLayout>
+						</StackLayout>
+						<StackLayout *ngIf="DGAME.details.p2Accepted>0 && DGAME.active>0 && DGAME.details.scoredBy==0" paddingTop="33">
+							<Button text="score" class="PB" (tap)="onScore()"></Button>
+						</StackLayout>
+
+						<StackLayout *ngIf="DGAME.details.p2Accepted<1 && DGAME.active>0" paddingTop="33">
+							<GridLayout rows="*" columns="*,*">
+								<StackLayout row="0" column="0">
+									<Button text="accept" class="PB" (tap)="onAccept()"></Button>
+
+								</StackLayout>
+								<StackLayout row="0" column="1">
+									<Button text="reject" class="CGB" (tap)="onCancel(2)"></Button>
+
+								</StackLayout>
+							</GridLayout>
+						</StackLayout>
+
+					</StackLayout>
+				</GridLayout>
+	    </ScrollView>
+	</StackLayout>
+
+</GridLayout>

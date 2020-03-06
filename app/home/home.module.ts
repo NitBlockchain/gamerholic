@@ -12,6 +12,8 @@ import { NativeScriptFormsModule } from "nativescript-angular/forms";
 import { HomeRoutingModule } from "./home-routing.module";
 import { HomeComponent } from "./home.component";
 
+import { BottomBarModule } from "./bottomBar/bottomBar.module";
+
 @NgModule({
     imports: [
         NativeScriptUISideDrawerModule,
@@ -23,7 +25,8 @@ import { HomeComponent } from "./home.component";
         NativeScriptUIGaugeModule,
         NativeScriptCommonModule,
         HomeRoutingModule,
-        NativeScriptFormsModule
+        NativeScriptFormsModule,
+        BottomBarModule
     ],
     declarations: [
         HomeComponent

@@ -8,10 +8,10 @@ var HomeComponent = /** @class */ (function () {
     };
     HomeComponent = __decorate([
         core_1.Component({
-            selector: "About",
+            selector: "Home",
             moduleId: module.id,
-            templateUrl: "./about.component.html",
-            styleUrls: ["./about.component.css"]
+            templateUrl: "./home.component.html",
+            styleUrls: ["./home.component.css"]
         }),
         __metadata("design:paramtypes", [])
     ], HomeComponent);

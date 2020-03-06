@@ -15,493 +15,330 @@ import { Http, Headers, RequestOptions } from '@angular/http';
   and Angular DI.
 */
 @Injectable({
-  providedIn: 'root',
+    providedIn: 'root',
 })
 export class GameProvider {
 
-  private serverUrl = "https://app.grabbit.cheap";
+    private server = "https://api.gamerholic.com";
 
-  constructor(public http: HttpClient) {
+    constructor(public http: HttpClient) {
 
-  }
-
-  ////guser
-  gUSER(token: any, user: any, lat: any, lng: any) {
-    let DATA = {
-      token: token,
-      user: user,
-      lat: lat,
-      lng: lng
     }
 
-    const httpOptions = {
-      headers: new HttpHeaders({
-        'Content-Type': 'application/json'
-      })
-    };
+    ////guser
+    gUSER(token: any, user: any, lat: any, lng: any) {
+        let DATA = {
+            token: token,
+            user: user,
+            lat: lat,
+            lng: lng
+        }
 
-    return this.http.post('https://app.grabbit.cheap/gUSER', DATA, httpOptions)
-    // .map(this.extractData)
-    // .catch(this.handleError);
-  }
+        const httpOptions = {
+            headers: new HttpHeaders({
+                'Content-Type': 'application/json'
+            })
+        };
 
-  reload(token: any, user: any, gID: any, type: any) {
-    let DATA = {
-      token: token,
-      user: user,
-      gID: gID,
-      type: type
+        return this.http.post(this.server + '/gUSER', DATA, httpOptions)
+        // .map(this.extractData)
+        // .catch(this.handleError);
     }
 
-    const httpOptions = {
-      headers: new HttpHeaders({
-        'Content-Type': 'application/json'
-      })
-    };
+    gPROFILE(token: any, user: any, profile: any) {
+        let DATA = {
+            token: token,
+            user: user,
+            profile: profile
+        }
 
-    return this.http.post('https://app.grabbit.cheap/reload', DATA, httpOptions)
-    // .map(this.extractData)
-    // .catch(this.handleError);
-  }
+        const httpOptions = {
+            headers: new HttpHeaders({
+                'Content-Type': 'application/json'
+            })
+        };
 
-  bGLOBALGAMES() {
-    let DATA = {
-      token: null,
-      user: null,
+        return this.http.post(this.server + '/gPROFILE', DATA, httpOptions)
+        // .map(this.extractData)
+        // .catch(this.handleError);
     }
 
-    const httpOptions = {
-      headers: new HttpHeaders({
-        'Content-Type': 'application/json'
-      })
-    };
+    sendChallenge(token: any, user: any, opponent: any, game: any, amount: any, rules: any, type: any) {
+        let DATA = {
+            token: token,
+            user: user,
+            opponent: opponent,
+            game: game,
+            amount: amount,
+            rules: rules,
+            type: type
+        }
 
-    return this.http.post('https://app.grabbit.cheap/bGLOBALGAMES', DATA, httpOptions)
-    // .map(this.extractData)
-    // .catch(this.handleError);
-  }
+        const httpOptions = {
+            headers: new HttpHeaders({
+                'Content-Type': 'application/json'
+            })
+        };
 
-  bLOCALGAMES(token, user, lat, lng) {
-    let DATA = {
-      token: token,
-      user: user,
-      lat: lat,
-      lng: lng
+        return this.http.post(this.server + '/challenge', DATA, httpOptions)
+        // .map(this.extractData)
+        // .catch(this.handleError);
+    }
+    acceptChallenge(token: any, user: any, challenge: any) {
+        let DATA = {
+            token: token,
+            user: user,
+            challenge: challenge,
+        }
+
+        const httpOptions = {
+            headers: new HttpHeaders({
+                'Content-Type': 'application/json'
+            })
+        };
+
+        return this.http.post(this.server + '/accept', DATA, httpOptions)
+        // .map(this.extractData)
+        // .catch(this.handleError);
     }
 
-    const httpOptions = {
-      headers: new HttpHeaders({
-        'Content-Type': 'application/json'
-      })
-    };
+    scoreChallenge(token: any, user: any, challenge: any, winner: any) {
+        let DATA = {
+            token: token,
+            user: user,
+            challenge: challenge,
+            winner: winner
+        }
 
-    return this.http.post('https://app.grabbit.cheap/bLOCALGAMES', DATA, httpOptions)
-    // .map(this.extractData)
-    // .catch(this.handleError);
-  }
+        const httpOptions = {
+            headers: new HttpHeaders({
+                'Content-Type': 'application/json'
+            })
+        };
 
-  ////business
-  bizSAVE(token: string, user: string, bizname: string, address: string, phone: string, story: string, email: string, bType: string, lat: any, lng: any) {
-    let DATA = {
-      token: token,
-      user: user,
-      bizName: bizname,
-      phone: phone,
-      story: story,
-      email: email,
-      bType: bType,
-      lat: lat,
-      lng: lng
+        return this.http.post(this.server + '/score', DATA, httpOptions)
+        // .map(this.extractData)
+        // .catch(this.handleError);
     }
 
-    const httpOptions = {
-      headers: new HttpHeaders({
-        'Content-Type': 'application/json'
-      })
-    };
+    scoreAccept(token: any, user: any, challenge: any, type: any) {
+        let DATA = {
+            token: token,
+            user: user,
+            challenge: challenge,
+            type: type
+        }
+        console.log(type)
+        const httpOptions = {
+            headers: new HttpHeaders({
+                'Content-Type': 'application/json'
+            })
+        };
 
-    return this.http.post('https://app.grabbit.cheap/bSAVE', DATA, httpOptions)
-    // .map(this.extractData)
-    // .catch(this.handleError);
-  }
-
-  ////game
-  bGAMES(lat, lng) {
-    let DATA = {
-      // token: user_token,
-      // user_id: user_id,
-      // gType: gType,
-      // gID: gID,
-      lat: lat,
-      lng: lng
+        return this.http.post(this.server + '/confirm', DATA, httpOptions)
+        // .map(this.extractData)
+        // .catch(this.handleError);
     }
 
-    const httpOptions = {
-      headers: new HttpHeaders({
-        'Content-Type': 'application/json'
-      })
-    };
+    withdraw(token: any, user: any, amount: any, address: any, type: any) {
+        let DATA = {
+            token: token,
+            user: user,
+            amount: amount,
+            address: address,
+            type: type
+        }
+        console.log(type)
+        const httpOptions = {
+            headers: new HttpHeaders({
+                'Content-Type': 'application/json'
+            })
+        };
 
-    return this.http.post('https://app.grabbit.cheap/bGAMES', DATA, httpOptions)
-    // .map(this.extractData)
-    // .catch(this.handleError);
-  }
-
-  onGrab(token: any, user: any, game: any) {
-    let DATA = {
-      token: token,
-      user: user,
-      game: game,
+        return this.http.post(this.server + '/withdraw', DATA, httpOptions)
+        // .map(this.extractData)
+        // .catch(this.handleError);
     }
 
-    const httpOptions = {
-      headers: new HttpHeaders({
-        'Content-Type': 'application/json'
-      })
-    };
+    gGAME(token: any, user: any, challenge: any) {
+        let DATA = {
+            token: token,
+            user: user,
+            challenge: challenge,
+        }
 
-    return this.http.post('https://app.grabbit.cheap/grab', DATA, httpOptions)
-    // .map(this.extractData)
-    // .catch(this.handleError);
-  }
+        const httpOptions = {
+            headers: new HttpHeaders({
+                'Content-Type': 'application/json'
+            })
+        };
 
-  onSlap(token: any, user: any, game: any) {
-    let DATA = {
-      token: token,
-      user: user,
-      game: game,
+        return this.http.post(this.server + '/gGAME', DATA, httpOptions)
+        // .map(this.extractData)
+        // .catch(this.handleError);
+    }
+    cancelChallenge(token: any, user: any, challenge: any, player: any) {
+        let DATA = {
+            token: token,
+            user: user,
+            challenge: challenge,
+            player: player
+        }
+
+        const httpOptions = {
+            headers: new HttpHeaders({
+                'Content-Type': 'application/json'
+            })
+        };
+
+        return this.http.post(this.server + '/cancel', DATA, httpOptions)
+        // .map(this.extractData)
+        // .catch(this.handleError);
     }
 
-    const httpOptions = {
-      headers: new HttpHeaders({
-        'Content-Type': 'application/json'
-      })
-    };
+    ////chat
+    CHAT(token: any, user: any, message: any, id: any) {
+        let DATA = {
+            token: token,
+            user: user,
+            message: message,
+            id: id
+        }
 
-    return this.http.post('https://app.grabbit.cheap/slap', DATA, httpOptions)
-    // .map(this.extractData)
-    // .catch(this.handleError);
-  }
+        const httpOptions = {
+            headers: new HttpHeaders({
+                'Content-Type': 'application/json'
+            })
+        };
 
-  onSneak(token: any, user: any, game: any) {
-    let DATA = {
-      token: token,
-      user: user,
-      game: game,
+        return this.http.post(this.server + '/CHAT', DATA, httpOptions)
+        // .map(this.extractData)
+        // .catch(this.handleError);
     }
 
-    const httpOptions = {
-      headers: new HttpHeaders({
-        'Content-Type': 'application/json'
-      })
-    };
+    onChat(token: any, user: any, message: any, id: any) {
+        let DATA = {
+            token: token,
+            user: user,
+            message: message,
+            id: id
+        }
 
-    return this.http.post('https://app.grabbit.cheap/sneak', DATA, httpOptions)
-    // .map(this.extractData)
-    // .catch(this.handleError);
-  }
+        const httpOptions = {
+            headers: new HttpHeaders({
+                'Content-Type': 'application/json'
+            })
+        };
 
-  onAvatar(token: any, user: any, avatar: any) {
-    let DATA = {
-      token: token,
-      user: user,
-      avatar: avatar,
+        return this.http.post(this.server + '/chat', DATA, httpOptions)
+        // .map(this.extractData)
+        // .catch(this.handleError);
     }
 
-    const httpOptions = {
-      headers: new HttpHeaders({
-        'Content-Type': 'application/json'
-      })
-    };
+    gChat(token: any, user: any, id: any) {
+        let DATA = {
+            token: token,
+            user: user,
+            id: id
+        }
 
-    return this.http.post('https://app.grabbit.cheap/avatar', DATA, httpOptions)
-    // .map(this.extractData)
-    // .catch(this.handleError);
-  }
+        const httpOptions = {
+            headers: new HttpHeaders({
+                'Content-Type': 'application/json'
+            })
+        };
 
-  onEdit(token: any, user: any, text: any, type: any) {
-    let DATA = {
-      token: token,
-      user: user,
-      text: text,
-      type: type
+        return this.http.post(this.server + '/gchat', DATA, httpOptions)
+        // .map(this.extractData)
+        // .catch(this.handleError);
     }
 
-    const httpOptions = {
-      headers: new HttpHeaders({
-        'Content-Type': 'application/json'
-      })
-    };
+    onEdit(token: any, user: any, text: any, type: any) {
+        let DATA = {
+            token: token,
+            user: user,
+            text: text,
+            type: type
+        }
 
-    return this.http.post('https://app.grabbit.cheap/profile/edit', DATA, httpOptions)
-    // .map(this.extractData)
-    // .catch(this.handleError);
-  }
+        const httpOptions = {
+            headers: new HttpHeaders({
+                'Content-Type': 'application/json'
+            })
+        };
 
-  onTimer(token: any, user: any, gID: any) {
-    let DATA = {
-      token: token,
-      user: user,
-      gID: gID,
+        return this.http.post(this.server + '/profile/edit', DATA, httpOptions)
+        // .map(this.extractData)
+        // .catch(this.handleError);
     }
 
-    const httpOptions = {
-      headers: new HttpHeaders({
-        'Content-Type': 'application/json'
-      })
-    };
+    ////login
+    login(number: string, device: string, lat: string, lng: string, country: string, deviceManufacturer, deviceModel, isIOS, isAndroid) {
+        // console.log(device)
+        let DATA = {
+            number: number,
+            device: device,
+            lat: lat,
+            lng: lng,
+            country: country,
+            deviceManufacturer: deviceManufacturer,
+            deviceModel: deviceModel,
+            isIOS: isIOS,
+            isAndroid: isAndroid
+        }
 
-    return this.http.post('https://app.grabbit.cheap/timer', DATA, httpOptions)
-    // .map(this.extractData)
-    // .catch(this.handleError);
-  }
+        const httpOptions = {
+            headers: new HttpHeaders({
+                'Content-Type': 'application/json'
+            })
+        };
 
-  play(token: any, user: any, gID: any) {
-    let DATA = {
-      token: token,
-      user: user,
-      gID: gID,
+        return this.http.post(this.server + '/login', DATA, httpOptions)
+        // .map(this.extractData)
+        // .catch(this.handleError);
     }
 
-    const httpOptions = {
-      headers: new HttpHeaders({
-        'Content-Type': 'application/json'
-      })
-    };
+    loginComplete(code: string, device: string) {
+        let DATA = {
+            code: code,
+            device: device,
+        }
 
-    return this.http.post('https://app.grabbit.cheap/play', DATA, httpOptions)
-    // .map(this.extractData)
-    // .catch(this.handleError);
-  }
+        const httpOptions = {
+            headers: new HttpHeaders({
+                'Content-Type': 'application/json'
+            })
+        };
 
-  login(number: string, device: string, lat: string, lng: string, country: string, deviceManufacturer, deviceModel, isIOS, isAndroid) {
-    // console.log(device)
-    let DATA = {
-      number: number,
-      device: device,
-      lat: lat,
-      lng: lng,
-      country: country,
-      deviceManufacturer: deviceManufacturer,
-      deviceModel: deviceModel,
-      isIOS: isIOS,
-      isAndroid: isAndroid
+        return this.http.post(this.server + '/loginComplete', DATA, httpOptions)
+        // .map(this.extractData)
+        // .catch(this.handleError);
     }
 
-    const httpOptions = {
-      headers: new HttpHeaders({
-        'Content-Type': 'application/json'
-      })
-    };
 
-    return this.http.post('https://app.grabbit.cheap/login', DATA, httpOptions)
-    // .map(this.extractData)
-    // .catch(this.handleError);
-  }
-
-  loginComplete(code: string, device: string) {
-    let DATA = {
-      code: code,
-      device: device,
+    private createRequestHeader() {
+        // set headers here e.g.
+        let headers = new HttpHeaders({
+            'Content-Type': 'application/json'
+        })
+        return headers;
     }
 
-    const httpOptions = {
-      headers: new HttpHeaders({
-        'Content-Type': 'application/json'
-      })
-    };
-
-    return this.http.post('https://app.grabbit.cheap/loginComplete', DATA, httpOptions)
-    // .map(this.extractData)
-    // .catch(this.handleError);
-  }
-
-  bYELP(token: string, user: string, lat: string, lng: string, yelp: string) {
-    let DATA = {
-      user: user,
-      token: token,
-      yelp: yelp,
-      lat: lat,
-      lng: lng
+    private extractData(res: Response) {
+        let body = res;
+        return body || {};
     }
 
-    const httpOptions = {
-      headers: new HttpHeaders({
-        'Content-Type': 'application/json'
-      })
-    };
-
-    return this.http.post('https://app.grabbit.cheap/bYelp', DATA, httpOptions)
-    // .map(this.extractData)
-    // .catch(this.handleError);
-  }
-
-  vYELP(token: string, user: string, code: string) {
-    let DATA = {
-      user: user,
-      token: token,
-      code: code,
+    private handleError(error: Response | any) {
+        let errMsg: string;
+        if (error instanceof Response) {
+            const err = error || '';
+            errMsg = `${error.status} - ${error.statusText || ''} ${err}`;
+        } else {
+            errMsg = error.message ? error.message : error.toString();
+        }
+        console.error('error  is ' + JSON.stringify(errMsg));
+        return observableThrowError(errMsg);
     }
-
-    const httpOptions = {
-      headers: new HttpHeaders({
-        'Content-Type': 'application/json'
-      })
-    };
-
-    return this.http.post('https://app.grabbit.cheap/vYelp', DATA, httpOptions)
-    // .map(this.extractData)
-    // .catch(this.handleError);
-  }
-
-  gCREATECOUPON(token: string, user: string, prizeType: string, gameTitle: string, maxPlayers: any, prize: string, prize2: string, price: any, total: any, mysteryBoxValue: any) {
-    let DATA = {
-      user: user,
-      token: token,
-      prizeType: prizeType,
-      gameTitile: gameTitle,
-      maxPlayers: maxPlayers,
-      prize: prize,
-      prize2: prize2,
-      price: price,
-      total: total,
-      mysteryBoxValue: mysteryBoxValue
-    }
-
-    const httpOptions = {
-      headers: new HttpHeaders({
-        'Content-Type': 'application/json'
-      })
-    };
-
-    return this.http.post('https://app.grabbit.cheap/gCreateCOUPON', DATA, httpOptions)
-    // .map(this.extractData)
-    // .catch(this.handleError);
-  }
-
-
-  gCREATEBTC(token: string, user: string, gameTitle: string, prize: string, details: any, lat: any, lng: any) {
-    let DATA = {
-      user: user,
-      token: token,
-      gameTitle: gameTitle,
-      prize: prize,
-      details: details,
-      lat: lat,
-      lng: lng
-    }
-
-    const httpOptions = {
-      headers: new HttpHeaders({
-        'Content-Type': 'application/json'
-      })
-    };
-
-    return this.http.post('https://app.grabbit.cheap/gCreateBTC', DATA, httpOptions)
-    // .map(this.extractData)
-    // .catch(this.handleError);
-  }
-
-  onPayAddress(token: string, user: string, address: string) {
-    let DATA = {
-      user: user,
-      token: token,
-      address: address
-    }
-
-    const httpOptions = {
-      headers: new HttpHeaders({
-        'Content-Type': 'application/json'
-      })
-    };
-
-    return this.http.post('https://app.grabbit.cheap/onPayAddress', DATA, httpOptions)
-    // .map(this.extractData)
-    // .catch(this.handleError);
-  }
-
-
-  onWithdraw(token: string, user: string, amount: string, type: any) {
-    let DATA = {
-      user: user,
-      token: token,
-      amount: amount,
-      type: type
-    }
-
-    const httpOptions = {
-      headers: new HttpHeaders({
-        'Content-Type': 'application/json'
-      })
-    };
-
-    return this.http.post('https://app.grabbit.cheap/onWithdraw', DATA, httpOptions)
-    // .map(this.extractData)
-    // .catch(this.handleError);
-  }
-
-  onPay(token: string, user: string, grabs: string, slaps: string, sneaks: string, payType) {
-    let DATA = {
-      user: user,
-      token: token,
-      grabs: grabs,
-      slaps: slaps,
-      sneaks: sneaks,
-      payType: payType,
-    }
-
-    const httpOptions = {
-      headers: new HttpHeaders({
-        'Content-Type': 'application/json'
-      })
-    };
-
-    return this.http.post('https://app.grabbit.cheap/onPay', DATA, httpOptions)
-    // .map(this.extractData)
-    // .catch(this.handleError);
-  }
-
-  gREDEEM(token: any, user: any, code: any) {
-    let DATA = {
-      token: token,
-      user: user,
-      code: code
-    }
-
-    const httpOptions = {
-      headers: new HttpHeaders({
-        'Content-Type': 'application/json'
-      })
-    };
-
-    return this.http.post('https://app.grabbit.cheap/redeem', DATA, httpOptions)
-    // .map(this.extractData)
-    // .catch(this.handleError);
-  }
-
-  private createRequestHeader() {
-    // set headers here e.g.
-    let headers = new HttpHeaders({
-      'Content-Type': 'application/json'
-    })
-    return headers;
-  }
-
-  private extractData(res: Response) {
-    let body = res;
-    return body || {};
-  }
-
-  private handleError(error: Response | any) {
-    let errMsg: string;
-    if (error instanceof Response) {
-      const err = error || '';
-      errMsg = `${error.status} - ${error.statusText || ''} ${err}`;
-    } else {
-      errMsg = error.message ? error.message : error.toString();
-    }
-    console.error('error  is ' + JSON.stringify(errMsg));
-    return observableThrowError(errMsg);
-  }
 
 }

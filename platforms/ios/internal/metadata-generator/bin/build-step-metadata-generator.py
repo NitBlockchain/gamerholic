@@ -7,6 +7,8 @@ import sys
 
 print("Python version: " + sys.version)
 
+def str2bool(v):
+  return v.lower() in ("yes", "y", "true", "t", "1")
 
 def env(env_name):
     return os.environ[env_name]
@@ -22,6 +24,8 @@ def env_or_empty(env_name):
         return ""
     return result
 
+def env_bool(env_name):
+    return str2bool(env_or_empty(env_name))
 
 def map_and_list(func, iterable):
     result = map(func, iterable)
@@ -33,6 +37,7 @@ def map_and_list(func, iterable):
 # process environment variables
 conf_build_dir = env("CONFIGURATION_BUILD_DIR")
 sdk_root = env("SDKROOT")
+src_root = env("SRCROOT")
 deployment_target_flag_name = env("DEPLOYMENT_TARGET_CLANG_FLAG_NAME")
 deployment_target = env(env("DEPLOYMENT_TARGET_CLANG_ENV_NAME"))
 std = env("GCC_C_LANGUAGE_STANDARD")
@@ -42,6 +47,7 @@ framework_search_paths = env_or_empty("FRAMEWORK_SEARCH_PATHS")
 framework_search_paths_parsed = map_and_list((lambda s: "-F" + s), shlex.split(framework_search_paths))
 other_cflags = env_or_empty("OTHER_CFLAGS")
 other_cflags_parsed = shlex.split(other_cflags)
+enable_modules = env_bool("CLANG_ENABLE_MODULES")
 preprocessor_defs = env_or_empty("GCC_PREPROCESSOR_DEFINITIONS")
 preprocessor_defs_parsed = map_and_list((lambda s: "-D" + s), shlex.split(preprocessor_defs, '\''))
 typescript_output_folder = env_or_none("TNS_TYPESCRIPT_DECLARATIONS_PATH")
@@ -92,6 +98,14 @@ def generate_metadata(arch):
         generator_call.extend(["-output-yaml", current_yaml_output_folder])
         print("Generating debug metadata in: \"{}\"".format(current_yaml_output_folder))
 
+    whitelist_file_name = os.path.join(src_root, "whitelist.mdg")
+    if os.path.exists(whitelist_file_name):
+      generator_call.extend(["--whitelist-modules-file", whitelist_file_name])
+
+    blacklist_file_name = os.path.join(src_root, "blacklist.mdg")
+    if os.path.exists(blacklist_file_name):
+      generator_call.extend(["--blacklist-modules-file", blacklist_file_name])
+
     # clang arguments
     generator_call.extend(["Xclang",
                            "-isysroot", sdk_root,
@@ -103,6 +117,10 @@ def generate_metadata(arch):
     generator_call.extend(framework_search_paths_parsed)  # FRAMEWORK_SEARCH_PATHS
     generator_call.extend(other_cflags_parsed)  # OTHER_CFLAGS
     generator_call.extend(preprocessor_defs_parsed)  # GCC_PREPROCESSOR_DEFINITIONS
+
+    if enable_modules:
+        # -I. is needed for includes coming from clang's lib/clang/<version>/include/ directory when parsing modules
+        generator_call.extend(["-I.", "-fmodules"])
 
     child_process = subprocess.Popen(generator_call, stderr=subprocess.PIPE, universal_newlines=True)
     sys.stdout.flush()

@@ -84,6 +84,7 @@ def computeBuildToolsVersion = { ->
 }
 
 def enableAnalytics = (project.hasProperty("gatherAnalyticsData") && project.gatherAnalyticsData == "true")
+def enableVerboseMDG = project.gradle.startParameter.logLevel.name() == 'DEBUG'
 def analyticsFilePath = "$rootDir/analytics/build-statistics.json"
 def analyticsCollector = project.ext.AnalyticsCollector.withOutputPath(analyticsFilePath)
 if (enableAnalytics) {
@@ -734,6 +735,11 @@ task collectAllJars {
     }
 }
 
+task copyMetadataFilters(type: Copy) {
+    from "$rootDir/whitelist.mdg", "$rootDir/blacklist.mdg"
+    into "$BUILD_TOOLS_PATH"
+}
+
 task copyMetadata {
     doLast {
         copy {
@@ -747,6 +753,8 @@ task buildMetadata(type: BuildToolTask) {
     if (!findProject(':android-metadata-generator').is(null)) {
         dependsOn ':android-metadata-generator:jar'
     }
+
+    dependsOn copyMetadataFilters
 
     // As some external gradle plugins can reorder the execution order of the tasks it may happen that buildMetadata is executed after merge{Debug/Release}Assets
     // in that case the metadata won't be included in the result apk and it will crash, so to avoid this we are adding the copyMetadata task which will manually copy
@@ -814,6 +822,10 @@ task buildMetadata(type: BuildToolTask) {
 
         if(enableAnalytics){
             paramz.add("analyticsFilePath=$analyticsFilePath")
+        }
+
+        if(enableVerboseMDG){
+            paramz.add("verbose")
         }
 
         args paramz.toArray()
@@ -924,6 +936,8 @@ task cleanSbg(type: Delete) {
 
 task cleanMdg(type: Delete) {
     delete "$BUILD_TOOLS_PATH/$MDG_OUTPUT_DIR",
+            "$BUILD_TOOLS_PATH/whitelist.mdg",
+            "$BUILD_TOOLS_PATH/blacklist.mdg",
             "$BUILD_TOOLS_PATH/$MDG_JAVA_DEPENDENCIES",
             "$METADATA_OUT_PATH"
 }

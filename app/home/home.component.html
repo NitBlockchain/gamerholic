@@ -1,568 +1,263 @@
-<ActionBar title="Grabbit" class="h1">
-  <ActionItem (tap)="onMenu()" text="Menu" ios.position="left" android.position="actionBar" *ngIf="currentTabIndex!=3 &&  currentTabIndex!=1">
-  </ActionItem>
-  <ActionItem (tap)="showCreate=true" text="Create" ios.position="left" android.position="actionBar" *ngIf="currentTabIndex==1">
-  </ActionItem>
-
-  <ActionItem (tap)="onPlay()" ios.position="right" text="Play" *ngIf="currentTabIndex==2  && !USERINGAME"></ActionItem>
-  <ActionItem (tap)="onShare()" ios.position="right" text="Grab Friends" *ngIf="currentTabIndex==2  && USERINGAME && USERINGAME.grabs>0"></ActionItem>
-  <ActionItem (tap)="onReload(1)" ios.position="right" text="Reload" *ngIf="currentTabIndex==2  && USERINGAME && USERINGAME.grabs<1 && USERINGAME.slaps>0 && USERINGAME.sneaks>0"></ActionItem>
-  <ActionItem (tap)="onReload(2)" ios.position="right" text="Reload" *ngIf="currentTabIndex==2  && USERINGAME && USERINGAME.slaps<1 && USERINGAME.grabs>0 && USERINGAME.sneaks>0"></ActionItem>
-    <ActionItem (tap)="onReload(3)" ios.position="right" text="Reload" *ngIf="currentTabIndex==2  && USERINGAME && USERINGAME.sneaks<1 && USERINGAME.grabs>0 && USERINGAME.slaps>0"></ActionItem>
-
-  <ActionItem (tap)="onEdit()" ios.position="right" text="Edit" *ngIf="currentTabIndex==3 && user"></ActionItem>
-  <ActionItem (tap)="onType('local')" ios.position="right" text="Local Games" *ngIf="currentTabIndex==1 && $gType=='global'"></ActionItem>
-  <ActionItem (tap)="onType('global')" ios.position="right" text="Global Games" *ngIf="currentTabIndex==1 && $gType=='local'"></ActionItem>
+<ActionBar title="Bottombar" backgroundColor="#0D0D12">
+	<StackLayout orientation="vertical">
+		<!-- Header Start -->
+		<Label horizontalAlignment="center" letterSpacing="0.2">
+			<FormattedString>
+				<Span color="#F1A110" fontSize="24" fontWeight="bold" text="GAMER"></Span>
+				<Span color="#fff" fontSize="21" fontWeight="normal" text="HOLIC"></Span>
+			</FormattedString>
+		</Label>
+		<!-- Header End -->
+	</StackLayout>
 </ActionBar>
 
-<GridLayout>
-  <GridLayout>
-    <Tabs #tabs [selectedIndex]="defaultSelected" (selectedIndexChanged)="onSelectedIndexChanged($event)">
-      <TabContentItem [backgroundColor]="tabList[0].backgroundColor">
-        <ScrollView orientation="vertical">
-          <GridLayout rows="*,*,*,*,*,*,*" columns="*" *ngIf="!DUSER">
-            <StackLayout orientation="vertical" row="0" backgroundColor="lightgray">
 
-              <Label text="Wallet" class="h1 text-center p-t-20 p-b-20" horizontalAlignment="stretch"></Label>
-            </StackLayout>
-            <StackLayout orientation="vertical" row="1">
-
-              <Label text="login to view your wallet" class="h3 text-center p-t-20 p-b-20" horizontalAlignment="stretch"></Label>
-            </StackLayout>
-          </GridLayout>
-
-          <GridLayout rows="*,*,*,*,*,*,*,*,*" columns="*" *ngIf="DUSER">
-
-            <StackLayout orientation="vertical" row="0" backgroundColor="lightgray">
-
-              <Label text="Wallet" class="h1 text-center p-t-20 p-b-20" horizontalAlignment="stretch"></Label>
-            </StackLayout>
-            <StackLayout orientation="vertical" row="1" backgroundColor="#F1F1F1" verticalAlignment="middle">
-
-              <Label text="Tools" class="h3 text-center p-t-20 p-b-20 textBold," horizontalAlignment="stretch"></Label>
-            </StackLayout>
-            <StackLayout orientation="vertical" row="2" class="p-t-20 p-b-20" *ngIf="!showBuyTools">
-
-              <Label text="Grabs: {{DUSER.wallet[0].tools[0].grabs}}" class="h3 text-center " horizontalAlignment="stretch"></Label>
-              <Label text="Slaps: {{DUSER.wallet[0].tools[0].slaps}}" class="h3 text-center " horizontalAlignment="stretch"></Label>
-              <Label text="Sneaks: {{DUSER.wallet[0].tools[0].sneaks}}" class="h3 text-center" horizontalAlignment="stretch"></Label>
-              <Button text="Buy Tools" (tap)="showBuyTools=true" class="-primary -rounded-lg"></Button>
-
-            </StackLayout>
-
-            <StackLayout class="form" *ngIf="showBuyTools" row="2">
-
-              <GridLayout rows="*,*,*,*,*" columns="*">
-                <StackLayout class="input-field" row="0">
-
-                  <Label text="Buy slaps, grabs & sneaks @ $0.10 each" class="h4 text-center p-t-20" horizontalAlignment="stretch"></Label>
-                </StackLayout>
-
-                <StackLayout class="input-field" row="1">
-                  <Label row="1" col="0" text="Grabs" horizontalAlignment="left" class="label" ></Label>
-
-                  <TextField class="input" hint="How Many Grabs" [(ngModel)]="buyGrabs" keyboardType="number" autocorrect="false" maxLength="2" autocapitalizationType="none"></TextField>
-                </StackLayout>
-
-                <StackLayout class="input-field" row="2">
-                  <Label row="1" col="0" text="Slaps" horizontalAlignment="left" class="label" ></Label>
-
-                  <TextField class="input" hint="How Many Slaps" [(ngModel)]="buySlaps" keyboardType="number" autocorrect="false" maxLength="2" autocapitalizationType="none"></TextField>
-                </StackLayout>
-
-                <StackLayout class="input-field" row="3">
-                  <Label row="1" col="0" text="Sneaks" horizontalAlignment="left" class="label" ></Label>
-
-                  <TextField class="input" hint="How Many Sneaks" [(ngModel)]="buySneaks" keyboardType="number" autocorrect="false" maxLength="2" autocapitalizationType="none"></TextField>
-                </StackLayout>
-
-                <StackLayout orientation="vertical" row="4" backgroundColor="#F1F1F1">
-
-                  <Label text="total USD: ${{(buySlaps*.10) + (buyGrabs*.10) + (buySneaks*.10) || 0 | number : '1.2-2'}}" class="h2 text-center p-t-20" horizontalAlignment="stretch" textWrap="true"></Label>
-                  <Label text="total BTC: {{((buySlaps*.10) + (buyGrabs*.10) + (buySneaks*.10))/btc_value || 0 | number : '1.4-4'}}" class="h3 text-center p-t-20" horizontalAlignment="stretch" textWrap="true"></Label>
-                  <Label text="total OWO: {{((buySlaps*.10) + (buyGrabs*.10) + (buySneaks*.10))/owo_value || 0 | number : '1.8-8'}}" class="h3 text-center p-t-20" horizontalAlignment="stretch" textWrap="true"></Label>
-                  <Label text="1 btc = ${{btc_value}}" class="h4 text-center p-t-20" horizontalAlignment="stretch" textWrap="true"></Label>
-
-                  <Label text="Most games offer you free slaps, grabs and sneaks to play with" class="h3 text-center p-t-20" horizontalAlignment="stretch" textWrap="true"></Label>
-                  <Label text="Buy more tools if needed" class="h3 text-center p-t-10" horizontalAlignment="stretch" textWrap="true" lineHeight="21"></Label>
-
-                </StackLayout>
-              </GridLayout>
-              <Button text="Pay" (tap)="onBuyTools()" class="-primary -rounded-lg"></Button>
-              <Button text="close" (tap)="showBuyTools =false"></Button>
-
-            </StackLayout>
-            <StackLayout orientation="vertical" row="3" backgroundColor="#F1F1F1" verticalAlignment="middle">
-
-              <Label text="Bitcoin" class="h3 text-center p-t-20 p-b-20 textBold" horizontalAlignment="stretch"></Label>
-            </StackLayout>
-            <StackLayout orientation="vertical" row="4" class="p-t-20 p-b-20">
-              <GridLayout rows="*,*,*" columns="*,*">
-                <Label row="0" colSpan="2" text="balance: {{DUSER.wallet[0].btc[0].btc_balance}}" class="h3 text-center "></Label>
-                <Label row="1" colSpan="2" text="{{DUSER.wallet[0].btc[0].btc_address}}" class="h3 text-center "></Label>
-                <Button row="2" column="0" text="copy" (tap)="onCopy(DUSER.wallet[0].btc[0].btc_address)" class="-primary -rounded-lg" ></Button>
-                <Button row="2" column="1" text="withdraw" (tap)="onWithdraw('1')" class="-primary -rounded-lg"></Button>
-
-              </GridLayout>
-            </StackLayout>
-            <StackLayout orientation="vertical" row="5" backgroundColor="#F1F1F1" verticalAlignment="middle" style="margin-bottom:60px">
-
-              <Label text="BTC WITHDRAW ADDRESS" class="h3 text-center p-t-20 p-b-20 textBold" horizontalAlignment="stretch"></Label>
-            </StackLayout>
-            <StackLayout orientation="vertical" row="6" verticalAlignment="middle" style="margin-bottom:100px">
-
-              <Label text="{{DUSER.wallet[0].btc[0].pay_address ||  'N/A'}}" class="h3 text-center " horizontalAlignment="stretch"></Label>
-              <Button text="Edit" (tap)="onPayAddress()" class="-primary -rounded-lg"></Button>
-
-            </StackLayout>
-            <StackLayout orientation="vertical" row="7" backgroundColor="#F1F1F1" verticalAlignment="middle" style="margin-bottom:60px">
-
-              <Label text="OWO" class="h3 text-center p-t-20 p-b-20 textBold" horizontalAlignment="stretch"></Label>
-            </StackLayout>
-            <StackLayout orientation="vertical" row="8" verticalAlignment="middle" style="margin-bottom:600px">
-              <GridLayout rows="*,*,*" columns="*,*">
-
-              <Label row="0" colSpan="2" text="balance: {{DUSER.wallet[0].owo[0].owo_balance}}" class="h3 text-center " horizontalAlignment="stretch"></Label>
-              <Label row="1" colSpan="2" text="{{DUSER.wallet[0].owo[0].owo_address}}" class="h3 text-center " horizontalAlignment="stretch"></Label>
-              <Button row="2" col="0" text="copy" (tap)="onCopy($event)" class="-primary -rounded-lg"></Button>
-              <Button row="2" column="1" text="withdraw" (tap)="onWithdraw('2')" class="-primary -rounded-lg"></Button>
-
-              </GridLayout>
-            </StackLayout>
-
-
-          </GridLayout>
-        </ScrollView>
-
-      </TabContentItem>
-
-      <TabContentItem [backgroundColor]="tabList[1].backgroundColor">
-        <ScrollView orientation="vertical">
-          <GridLayout rows="*,*,*,*,*,*,*" columns="*" *ngIf="showCreate">
-            <StackLayout orientation="vertical" row="0" backgroundColor="#F1F1F1">
-
-              <Label text="Create A Grabbit Game" class="h2 text-center p-t-20 p-b-20" horizontalAlignment="stretch"></Label>
-            </StackLayout>
-
-            <StackLayout class="p-20" row="1">
-              <Card:CardView class="cardStyle">
-                <StackLayout class="cardContent">
-                  <Label text="Create local grabbit games for coupons" class="m-b-10 h3" />
-                  <Label text="to your business" class="m-b-10 h3" />
-                  <Image src="https://cdn0.iconfinder.com/data/icons/sale-12/256/sale_coupons-512.png" (tap)="onCreate('coupon')" />
-                  <Button text="create" (tap)="onCreate('coupon')" class="-primary -rounded-lg"></Button>
-
-                </StackLayout>
-              </Card:CardView>
-            </StackLayout>
-
-            <StackLayout class="p-20" row="2">
-              <Card:CardView class="cardStyle">
-                <StackLayout class="cardContent">
-                  <Label text="Create grabbit games for bitcoin" class="m-b-10 h3" />
-                  <Label text="make a profit" class="m-b-10 h3" />
-                  <Image src="https://www.clipartwiki.com/clipimg/detail/83-835546_bitcoin-currency-black-orange-sign-free-photo-bitcoin.png" (tap)="onCreate('bitcoin')" />
-                  <Button text="create" (tap)="onCreate('bitcoin')" class="-primary -rounded-lg"></Button>
-
-                </StackLayout>
-              </Card:CardView>
-            </StackLayout>
-            <StackLayout class="p-20" row="3"  style="margin-bottom:399px">
-                  <Button text="close" (tap)="showCreate=false" class="-primary -rounded-lg"></Button>
-            </StackLayout>
-
-          </GridLayout>
-          <GridLayout rows="*,*,*,*,*,*,*" columns="*" *ngIf="!showCreate">
-            <StackLayout orientation="vertical" row="0" backgroundColor="#F1F1F1">
-
-              <Label text="Local Games" class="h3 text-center p-t-20 p-b-20" horizontalAlignment="stretch" *ngIf="$gType=='local'"></Label>
-              <Label text="Global Games" class="h3 text-center p-t-20 p-b-20" horizontalAlignment="stretch" *ngIf="$gType=='global'"></Label>
-            </StackLayout>
-
-            <StackLayout row="1" *ngIf="$gType=='global' && GLOBALGAMES && GLOBALGAMES.length>0">
-              <CardView *ngFor="let data of GLOBALGAMES" (tap)="setGameId(data.game)">
-                <StackLayout orientation="horizontal" margin="12" class="text-center" *ngIf="data.user_id!=user_id">
-                  <GridLayout rows="*,*" columns="*">
-                    <Label row="0" col="0" [text]="data.details.title" class="h4 text-center"></Label>
-                    <Label row="1" col="0" text="{{data.details.playersReady}}/{{data.details.playersMax}} players" class="h4 text-center"></Label>
-
-                  </GridLayout>
-                </StackLayout>
-                <StackLayout orientation="horizontal" margin="12" class="text-center" backgroundColor="#F1F1F1" *ngIf="data.user_id==user_id">
-                  <GridLayout rows="*,*" columns="*">
-                    <Label row="0" col="0" [text]="data.details.title" class="h4 text-center"></Label>
-                    <Label row="1" col="0" text="{{data.details.playersReady}}/{{data.details.playersMax}} players" class="h4 text-center"></Label>
-
-                  </GridLayout>
-                </StackLayout>
-
-              </CardView>
-
-            </StackLayout>
-
-            <StackLayout row="1" *ngIf="$gType=='global' && GLOBALGAMES && GLOBALGAMES.length<1">
-              <Label text="no games available" class="h3 text-center p-t-20 p-b-20" horizontalAlignment="stretch"></Label>
-
-            </StackLayout>
-
-            <StackLayout row="1" *ngIf="$gType=='local' && LOCALGAMES && LOCALGAMES.length>0">
-              <CardView *ngFor="let data of LOCALGAMES" (tap)="setGameId(data.game)">
-                <StackLayout orientation="horizontal" margin="12" class="text-center" *ngIf="data.user_id!=user_id">
-                  <GridLayout rows="*,*,*" columns="*">
-                    <Label row="0" col="0" [text]="PARSE(data.details).title" class="h4 text-center"></Label>
-                    <Label row="1" col="0" [text]="PARSE(data.details).prizeType" class="h4 text-center"></Label>
-                    <Label row="2" col="0" text="{{PARSE(data.details).playersReady}}/{{PARSE(data.details).playersMax}} players" class="h4 text-center"></Label>
-
-                  </GridLayout>
-                </StackLayout>
-                <StackLayout orientation="horizontal" margin="12" class="text-center" backgroundColor="#F1F1F1" *ngIf="data.user_id==user_id">
-                  <GridLayout rows="*,*,*" columns="*">
-                    <Label row="0" col="0" [text]="PARSE(data.details).title" class="h4 text-center"></Label>
-                    <Label row="1" col="0" [text]="PARSE(data.details).prizeType" class="h4 text-center"></Label>
-                    <Label row="2" col="0" text="{{PARSE(data.details).playersReady}}/{{PARSE(data.details).playersMax}} players" class="h4 text-center"></Label>
-
-                  </GridLayout>
-                </StackLayout>
-
-              </CardView>
-
-            </StackLayout>
-
-            <StackLayout row="1" *ngIf="$gType=='local' && (LOCALGAMES && LOCALGAMES.length<1)">
-              <Label text="no local games available, you are free  to create one" class="h3 text-center p-t-20 p-b-20" horizontalAlignment="stretch"></Label>
-
-            </StackLayout>
-
-          </GridLayout>
-        </ScrollView>
-      </TabContentItem>
-
-      <TabContentItem [backgroundColor]="tabList[2].backgroundColor">
-        <ScrollView orientation="vertical">
-          <GridLayout rows="*" columns="*" *ngIf="!Dgame">
-            <StackLayout orientation="vertical" verticalAlignment="middle" row="0">
-              <Label text="loading game..." class="h4 text-center p-t-20"></Label>
-            </StackLayout>
-          </GridLayout>
-          <GridLayout rows="*,*,*,*,*" columns="*" *ngIf="Dgame">
-
-            <StackLayout orientation="vertical" row="0" *ngIf="Dgame && liveGame<1">
-              <Label text="prize" class="h5 text-center p-t-20" horizontalAlignment="stretch" *ngIf="Dgame.details.started<1"></Label>
-              <Label text="prize grabbed by" class="h5 text-center p-t-20" horizontalAlignment="stretch" *ngIf="Dgame.details.started>0"></Label>
-              <Label [text]="title" class="h3 text-center" horizontalAlignment="stretch" *ngIf="Dgame.details.started<1"></Label>
-              <Label text="{{Dgame.winner.name || 'no one yet'}}" class="h3 text-center" horizontalAlignment="stretch" *ngIf="Dgame.details.started>0"></Label>
-              <Image *ngIf="title" horizontalAlignment="stretch" [src]="image" style="width:33%; height:auto;margin-top:33px;border-width: 4; border-color: #000; border-radius: 500;"></Image>
-              <Label text="players in game" class="h4 text-center p-t-20" horizontalAlignment="stretch"></Label>
-              <Label text="{{playersReady}}/{{playersMax}}" class="h1 text-center" horizontalAlignment="stretch"></Label>
-              <Label text="{{playersMin}} players to start game" class="h4 text-center" horizontalAlignment="stretch"></Label>
-            </StackLayout>
-            <StackLayout orientation="vertical" row="0" *ngIf="liveGame>0 && Dgame">
-
-              <Label text="prize" class="h5 text-center p-t-20" horizontalAlignment="stretch" *ngIf="Dgame.details.startPrep<1"></Label>
-              <Label text="prize grabbed by" class="h5 text-center p-t-20" horizontalAlignment="stretch" *ngIf="Dgame.details.startPrep>0"></Label>
-              <Label [text]="title" class="h3 text-center" horizontalAlignment="stretch" *ngIf="Dgame.details.started<1"></Label>
-              <Label [text]="Dgame.winner.name  || 'no one yet'" class="h3 text-center p-t-20" horizontalAlignment="stretch" *ngIf="Dgame.details.started>0"></Label>
-              <Image *ngIf="title && Dgame.details.started<1" horizontalAlignment="stretch" [src]="image" style="width:33%; height:auto;margin-top:33px;border-width: 1; border-color: #333; border-radius: 500;"></Image>
-              <Image *ngIf="title && Dgame.details.started>0" horizontalAlignment="stretch" [src]="Dgame.winner.avatar || '~/assets/imgs/avatars/blank.jpg'" style="width:33%; height:auto;margin-top:33px;border-width: 4; border-color: #000; border-radius: 500;"></Image>
-              <Label text="game starts in" class="h4 text-center p-t-20" horizontalAlignment="stretch" *ngIf="Dgame.details.startPrep>0 && Dgame.details.started<1"></Label>
-              <Label text="game ends in" class="h4 text-center p-t-20" horizontalAlignment="stretch" *ngIf="Dgame.details.startPrep>0 && Dgame.details.started>0 && Dgame.details.completed<1"></Label>
-              <Label text="game over" class="h4 text-center p-t-20" horizontalAlignment="stretch" *ngIf="Dgame.details.startPrep>0 && Dgame.details.started>0 && Dgame.details.completed>0"></Label>
-              <Label text="{{gameTime}}" class="h1 text-center p-b-20" horizontalAlignment="stretch"></Label>
-            </StackLayout>
-
-            <StackLayout orientation="horizontal" class="p-t-20 text-center p-b-20" row="1" backgroundColor="#F1F1F1" verticalAlignment="middle">
-              <GridLayout rows="*,*,*" columns="*,*,*" *ngIf="Dgame">
-                <Label row="0" column="0" text="{{Dgame.details.freeSlaps}}" class="h3 text-center " horizontalAlignment="stretch" *ngIf="Dgame.details.startPrep<1"></Label>
-                <Label row="0" column="1" text="{{Dgame.details.freeGrabs}}" class="h3 text-center " horizontalAlignment="stretch"  *ngIf="Dgame.details.startPrep<1"></Label>
-                <Label row="0" column="2" text="{{Dgame.details.freeSneaks}}" class="h3 text-center" horizontalAlignment="stretch" *ngIf="Dgame.details.startPrep<1"></Label>
-
-                <Label row="0" column="0" text="{{USERINGAME.slaps}}" class="h3 text-center " horizontalAlignment="stretch" *ngIf="Dgame.details.startPrep>0 && USERINGAME"></Label>
-                <Label row="0" column="1" text="{{USERINGAME.grabs}}" class="h3 text-center " horizontalAlignment="stretch"  *ngIf="Dgame.details.startPrep>0 && USERINGAME"></Label>
-                <Label row="0" column="2" text="{{USERINGAME.sneaks}}" class="h3 text-center" horizontalAlignment="stretch" *ngIf="Dgame.details.startPrep>0 && USERINGAME"></Label>
-
-                <Label row="0" column="0" text="{{Dgame.details.freeSlaps}}" class="h3 text-center " horizontalAlignment="stretch" *ngIf="Dgame.details.startPrep>0 && !USERINGAME"></Label>
-                <Label row="0" column="1" text="{{Dgame.details.freeGrabs}}" class="h3 text-center " horizontalAlignment="stretch"  *ngIf="Dgame.details.startPrep>0 && !USERINGAME"></Label>
-                <Label row="0" column="2" text="{{Dgame.details.freeSneaks}}" class="h3 text-center" horizontalAlignment="stretch" *ngIf="Dgame.details.startPrep>0 && !USERINGAME"></Label>
-
-                <Button row="1" column="0" text="Slap" width="100" class="slap" (tap)="onSlap()"></Button>
-                <Button row="1" column="1" text="Grab" width="100" class="grab" (tap)="onGrab()"></Button>
-                <Button row="1" column="2" text="Sneak" width="100" class="sneak" (tap)="onSneak()"></Button>
-                <Label row="3" column="0" colSpan="3" text="{{message}}" class="h4 text-center" horizontalAlignment="stretch"></Label>
-
-              </GridLayout>
-            </StackLayout>
-
-            <StackLayout orientation="vertical" row="2" verticalAlignment="middle">
-
-              <CardView class="cardStyle" margin="10" elevation="40" radius="1" *ngIf="Dgame">
-                <GridLayout rows="*,*,*,*,*,*" columns="*">
-                  <Label text="game info" class="createdBy text-center h4" row="0" col="0" textWrap="true" horizontalAlignment="stretch"></Label>
-                  <Label text="{{Dgame.details.info}}" class="createdBy text-center  h3" row="1" col="0" textWrap="true" horizontalAlignment="stretch"></Label>
-                  <Label text="Free Grabs: {{Dgame.details.freeGrabs}}, Free Slaps: {{Dgame.details.freeSlaps}}, Free Sneaks: {{Dgame.details.freeSneaks}} " class="createdBy text-center h4" row="2" col="0" textWrap="true" horizontalAlignment="stretch"></Label>
-                  <Label text="Insert: {{Dgame.details.toPlayGrabs | number : '1.0-0'}} Grabs" class="text-center h3 textBold" row="3" col="0" textWrap="true" horizontalAlignment="stretch" *ngIf="Dgame.details.toPlayGrabs>0"></Label>
-                  <Label text="Proof Of Prize  " class="text-center h5" row="4" col="0" textWrap="true" horizontalAlignment="stretch" *ngIf="Dgame.details.prizeType=='btc'"></Label>
-                  <Label text="{{Dgame.details.btc_address}}" class="text-center h4 textBold" row="5" col="0" textWrap="true" horizontalAlignment="stretch" *ngIf="Dgame.details.prizeType=='btc'" (tap)="onProve(Dgame.details.btc_address)"></Label>
-
-                </GridLayout>
-
-              </CardView>
-            </StackLayout>
-
-            <StackLayout orientation="vertical" row="3" backgroundColor="#F1F1F1" class="p-t-20" verticalAlignment="middle" *ngIf="PLAYERS &&  PLAYERS.length>0">
-
-              <Label text="Players" class="h2 text-center" horizontalAlignment="stretch"></Label>
-            </StackLayout>
-
-            <StackLayout orientation="vertical" row="4" *ngIf="PLAYERS" style="height:{{playersHeight}}px">
-
-              <CardView *ngFor="let data of PLAYERS">
-                <StackLayout orientation="horizontal" margin="12" class="text-center">
-                  <Image [src]="data.avatar" style="width:21%; height:auto;"></Image>
-                  <Label [text]="data.name" class="h2 text-center  p-l-20"></Label>
-
-                </StackLayout>
-
-              </CardView>
-
-            </StackLayout>
-
-          </GridLayout>
-        </ScrollView>
-
-
-      </TabContentItem>
-
-      <TabContentItem [backgroundColor]="tabList[3].backgroundColor">
-
-        <ScrollView orientation="vertical">
-          <GridLayout rows="*,*,*,*" columns="*">
-
-            <StackLayout orientation="vertical" row="0" *ngIf="DUSER">
-
-              <Image *ngIf="name" horizontalAlignment="stretch" [src]="avatar" style="width:44%; height:auto;margin-top:33px;" (tap)="onEdit()"></Image>
-              <Label [text]="name" class="h2 text-center p-t-20" horizontalAlignment="stretch"></Label>
-              <Label [text]="email" class="h2 text-center" horizontalAlignment="stretch"></Label>
-              <Label text="games played: {{gamesPlayed}}" class="h3 text-center" horizontalAlignment="stretch"></Label>
-              <Label text="wins: {{wins}}" class="h3 text-center" horizontalAlignment="stretch"></Label>
-              <Label text="practice: {{practiceCount}}" class="h3 text-center" horizontalAlignment="stretch"></Label>
-            </StackLayout>
-
-            <StackLayout orientation="vertical" row="1" backgroundColor="lightgray">
-
-              <Label text="select your avatar" class="h2 text-center p-t-20" horizontalAlignment="stretch" *ngIf="DUSER"></Label>
-              <Label text="avatar options" class="h2 text-center p-t-20" horizontalAlignment="stretch" *ngIf="!DUSER"></Label>
-            </StackLayout>
-
-            <StackLayout orientation="horizontal" class="p-t-20" row="2" backgroundColor="#F1F1F1">
-              <CardView class="cardStyle" margin="10" elevation="40" radius="1">
-                <GridLayout rows="*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*,*" columns="*,*,*,*">
-                  <Image src="~/assets/imgs/avatars/abra.png" margin="12" class="avatars" col="0" row="0" (tap)="onAvatar('abra.png')"></Image>
-                  <Image src="~/assets/imgs/avatars/alien_1.png" margin="12" class="avatars" col="1" row="0" (tap)="onAvatar('alien_1.png')"></Image>
-                  <Image src="~/assets/imgs/avatars/alien_2.png" margin="12" class="avatars" col="2" row="0" (tap)="onAvatar('alien_2.png')"></Image>
-                  <Image src="~/assets/imgs/avatars/alien_3.png" margin="12" class="avatars" col="3" row="0" (tap)="onAvatar('alien_3.png')"></Image>
-
-                  <Image src="~/assets/imgs/avatars/alien_4.png" margin="12" class="avatars" col="0" row="1" (tap)="onAvatar('alien_4.png')"></Image>
-                  <Image src="~/assets/imgs/avatars/alien_5.png" margin="12" class="avatars" col="1" row="1" (tap)="onAvatar('alien_5.png')"></Image>
-                  <Image src="~/assets/imgs/avatars/alien_6.png" margin="12" class="avatars" col="2" row="1" (tap)="onAvatar('alien_6.png')"></Image>
-                  <Image src="~/assets/imgs/avatars/alien_7.png" margin="12" class="avatars" col="3" row="1" (tap)="onAvatar('alien_7.png')"></Image>
-
-                  <Image src="~/assets/imgs/avatars/alien_8.png" margin="12" class="avatars" col="0" row="2" (tap)="onAvatar('alien_8.png')"></Image>
-                  <Image src="~/assets/imgs/avatars/alien.png" margin="12" class="avatars" col="1" row="2" (tap)="onAvatar('alien.png')"></Image>
-                  <Image src="~/assets/imgs/avatars/angry_2.png" margin="12" class="avatars" col="2" row="2" (tap)="onAvatar('angry_2.png')"></Image>
-                  <Image src="~/assets/imgs/avatars/angry_3.png" margin="12" class="avatars" col="3" row="2" (tap)="onAvatar('angry_3.png')"></Image>
-
-                  <Image src="~/assets/imgs/avatars/angry_4.png" margin="12" class="avatars" col="0" row="3" (tap)="onAvatar('angry_4.png')"></Image>
-                  <Image src="~/assets/imgs/avatars/angry_6.png" margin="12" class="avatars" col="1" row="3" (tap)="onAvatar('angry_6.png')"></Image>
-                  <Image src="~/assets/imgs/avatars/angry_7.png" margin="12" class="avatars" col="2" row="3" (tap)="onAvatar('angry_7.png')"></Image>
-                  <Image src="~/assets/imgs/avatars/angry_8.png" margin="12" class="avatars" col="3" row="3" (tap)="onAvatar('angry_8.png')"></Image>
-
-                  <Image src="~/assets/imgs/avatars/angry_9.png" margin="12" class="avatars" col="0" row="4" (tap)="onAvatar('angry_9.png')"></Image>
-                  <Image src="~/assets/imgs/avatars/angry_10.png" margin="12" class="avatars" col="1" row="4" (tap)="onAvatar('angry_10.png')"></Image>
-                  <Image src="~/assets/imgs/avatars/angry_11.png" margin="12" class="avatars" col="2" row="4" (tap)="onAvatar('angry_11.png')"></Image>
-                  <Image src="~/assets/imgs/avatars/angry_12.png" margin="12" class="avatars" col="3" row="4" (tap)="onAvatar('angry_12.png')"></Image>
-
-                  <Image src="~/assets/imgs/avatars/angry_13.png" margin="12" class="avatars" col="0" row="5" (tap)="onAvatar('angry_13.png')"></Image>
-                  <Image src="~/assets/imgs/avatars/angry_14.png" margin="12" class="avatars" col="1" row="5" (tap)="onAvatar('angry_14.png')"></Image>
-                  <Image src="~/assets/imgs/avatars/angry.png" margin="12" class="avatars" col="2" row="5" (tap)="onAvatar('angry.png')"></Image>
-                  <Image src="~/assets/imgs/avatars/aqualung.png" margin="12" class="avatars" col="3" row="5" (tap)="onAvatar('aqualung.png')"></Image>
-
-                  <Image src="~/assets/imgs/avatars/arab_1.png" margin="12" class="avatars" col="0" row="6" (tap)="onAvatar('arab_1.png')"></Image>
-                  <Image src="~/assets/imgs/avatars/arab.png" margin="12" class="avatars" col="1" row="6" (tap)="onAvatar('arab.png')"></Image>
-                  <Image src="~/assets/imgs/avatars/astronaut.png" margin="12" class="avatars" col="2" row="6" (tap)="onAvatar('astronaut.png')"></Image>
-                  <Image src="~/assets/imgs/avatars/avatar.png" margin="12" class="avatars" col="3" row="6" (tap)="onAvatar('avatar.png')"></Image>
-
-                  <Image src="~/assets/imgs/avatars/baby.png" margin="12" class="avatars" col="0" row="7" (tap)="onAvatar('baby.png')"></Image>
-                  <Image src="~/assets/imgs/avatars/boy_1.png" margin="12" class="avatars" col="1" row="7" (tap)="onAvatar('boy_1.png')"></Image>
-                  <Image src="~/assets/imgs/avatars/boy_2.png" margin="12" class="avatars" col="2" row="7" (tap)="onAvatar('boy_2.png')"></Image>
-                  <Image src="~/assets/imgs/avatars/boy_4.png" margin="12" class="avatars" col="3" row="7" (tap)="onAvatar('boy_4.png')"></Image>
-
-                  <Image src="~/assets/imgs/avatars/boy_5.png" margin="12" class="avatars" col="0" row="8" (tap)="onAvatar('boy_5.png')"></Image>
-                  <Image src="~/assets/imgs/avatars/boy.png" margin="12" class="avatars" col="1" row="8" (tap)="onAvatar('boy.png')"></Image>
-                  <Image src="~/assets/imgs/avatars/brain.png" margin="12" class="avatars" col="2" row="8" (tap)="onAvatar('brain.png')"></Image>
-                  <Image src="~/assets/imgs/avatars/caterpie.png" margin="12" class="avatars" col="3" row="8" (tap)="onAvatar('caterpie.png')"></Image>
-
-                  <Image src="~/assets/imgs/avatars/charmander.png" margin="12" class="avatars" col="0" row="9" (tap)="onAvatar('charmander.png')"></Image>
-                  <Image src="~/assets/imgs/avatars/clown.png" margin="12" class="avatars" col="1" row="9" (tap)="onAvatar('clown.png')"></Image>
-                  <Image src="~/assets/imgs/avatars/customer-service_1.png" margin="12" class="avatars" col="2" row="9" (tap)="onAvatar('customer-service_1.png')"></Image>
-                  <Image src="~/assets/imgs/avatars/customer-service.png" margin="12" class="avatars" col="3" row="9" (tap)="onAvatar('customer-service.png')"></Image>
-
-                  <Image src="~/assets/imgs/avatars/death.png" margin="12" class="avatars" col="0" row="10" (tap)="onAvatar('death.png')"></Image>
-                  <Image src="~/assets/imgs/avatars/eevee.png" margin="12" class="avatars" col="1" row="10" (tap)="onAvatar('eevee.png')"></Image>
-                  <Image src="~/assets/imgs/avatars/einstein.png" margin="12" class="avatars" col="2" row="10" (tap)="onAvatar('einstein.png')"></Image>
-                  <Image src="~/assets/imgs/avatars/facial-treatment.png" margin="12" class="avatars" col="3" row="10" (tap)="onAvatar('facial-treatment.png')"></Image>
-
-                  <Image src="~/assets/imgs/avatars/heisenberg.png" margin="12" class="avatars" col="0" row="11" (tap)="onAvatar('heisenberg.png')"></Image>
-                  <Image src="~/assets/imgs/avatars/incubator.png" margin="12" class="avatars" col="1" row="11" (tap)="onAvatar('incubator.png')"></Image>
-                  <Image src="~/assets/imgs/avatars/jesus_1.png" margin="12" class="avatars" col="2" row="11" (tap)="onAvatar('jesus_1.png')"></Image>
-                  <Image src="~/assets/imgs/avatars/jesus.png" margin="12" class="avatars" col="3" row="11" (tap)="onAvatar('jesus.png')"></Image>
-
-                  <Image src="~/assets/imgs/avatars/finger.png" margin="12" class="avatars" col="0" row="12" (tap)="onAvatar('finger.png')"></Image>
-                  <Image src="~/assets/imgs/avatars/firefighter.png" margin="12" class="avatars" col="1" row="12" (tap)="onAvatar('firefighter.png')"></Image>
-                  <Image src="~/assets/imgs/avatars/geek_2.png" margin="12" class="avatars" col="2" row="12" (tap)="onAvatar('geek_2.png')"></Image>
-                  <Image src="~/assets/imgs/avatars/geek.png" margin="12" class="avatars" col="3" row="12" (tap)="onAvatar('geek.png')"></Image>
-
-                  <Image src="~/assets/imgs/avatars/girl_1.png" margin="12" class="avatars" col="0" row="13" (tap)="onAvatar('girl_1.png')"></Image>
-                  <Image src="~/assets/imgs/avatars/girl_2.png" margin="12" class="avatars" col="1" row="13" (tap)="onAvatar('girl_2.png')"></Image>
-                  <Image src="~/assets/imgs/avatars/girl_3.png" margin="12" class="avatars" col="2" row="13" (tap)="onAvatar('girl_3.png')"></Image>
-                  <Image src="~/assets/imgs/avatars/girl_4.png" margin="12" class="avatars" col="3" row="13" (tap)="onAvatar('girl_4.png')"></Image>
-
-                  <Image src="~/assets/imgs/avatars/girl_6.png" margin="12" class="avatars" col="0" row="14" (tap)="onAvatar('girl_6.png')"></Image>
-                  <Image src="~/assets/imgs/avatars/girl_8.png" margin="12" class="avatars" col="1" row="14" (tap)="onAvatar('girl_8.png')"></Image>
-                  <Image src="~/assets/imgs/avatars/girl.png" margin="12" class="avatars" col="2" row="14" (tap)="onAvatar('girl.png')"></Image>
-                  <Image src="~/assets/imgs/avatars/god.png" margin="12" class="avatars" col="3" row="14" (tap)="onAvatar('god.png')"></Image>
-
-                  <Image src="~/assets/imgs/avatars/hacker.png" margin="12" class="avatars" col="0" row="15" (tap)="onAvatar('hacker.png')"></Image>
-                  <Image src="~/assets/imgs/avatars/happy_2.png" margin="12" class="avatars" col="1" row="15" (tap)="onAvatar('happy_2.png')"></Image>
-                  <Image src="~/assets/imgs/avatars/happy.png" margin="12" class="avatars" col="2" row="15" (tap)="onAvatar('happy.png')"></Image>
-                  <Image src="~/assets/imgs/avatars/heisenberg_1.png" margin="12" class="avatars" col="3" row="15" (tap)="onAvatar('heisenberg_1.png')"></Image>
-
-                  <Image src="~/assets/imgs/avatars/jigglypuff.png" margin="12" class="avatars" col="0" row="16" (tap)="onAvatar('jigglypuff.png')"></Image>
-                  <Image src="~/assets/imgs/avatars/lock.png" margin="12" class="avatars" col="1" row="16" (tap)="onAvatar('lock.png')"></Image>
-                  <Image src="~/assets/imgs/avatars/love-and-romance.png" margin="12" class="avatars" col="2" row="16" (tap)="onAvatar('love-and-romance.png')"></Image>
-                  <Image src="~/assets/imgs/avatars/man.png" margin="12" class="avatars" col="3" row="16" (tap)="onAvatar('man.png')"></Image>
-
-                  <Image src="~/assets/imgs/avatars/monster.png" margin="12" class="avatars" col="0" row="17" (tap)="onAvatar('monster.png')"></Image>
-                  <Image src="~/assets/imgs/avatars/motorcyclist.png" margin="12" class="avatars" col="1" row="17" (tap)="onAvatar('motorcyclist.png')"></Image>
-                  <Image src="~/assets/imgs/avatars/oculus-rift.png" margin="12" class="avatars" col="2" row="17" (tap)="onAvatar('oculus-rift.png')"></Image>
-                  <Image src="~/assets/imgs/avatars/pikachu.png" margin="12" class="avatars" col="3" row="17" (tap)="onAvatar('pikachu.png')"></Image>
-
-                  <Image src="~/assets/imgs/avatars/pirate.png" margin="12" class="avatars" col="0" row="18" (tap)="onAvatar('pirate.png')"></Image>
-                  <Image src="~/assets/imgs/avatars/problem.png" margin="12" class="avatars" col="1" row="18" (tap)="onAvatar('problem.png')"></Image>
-                  <Image src="~/assets/imgs/avatars/psyduck.png" margin="12" class="avatars" col="2" row="18" (tap)="onAvatar('psyduck.png')"></Image>
-                  <Image src="~/assets/imgs/avatars/rapper_2.png" margin="12" class="avatars" col="3" row="18" (tap)="onAvatar('rapper_2.png')"></Image>
-
-                  <Image src="~/assets/imgs/avatars/rapper.png" margin="12" class="avatars" col="0" row="19" (tap)="onAvatar('rapper.png')"></Image>
-                  <Image src="~/assets/imgs/avatars/robot_1.png" margin="12" class="avatars" col="1" row="19" (tap)="onAvatar('robot_1.png')"></Image>
-                  <Image src="~/assets/imgs/avatars/robot_2.png" margin="12" class="avatars" col="2" row="19" (tap)="onAvatar('robot_2.png')"></Image>
-                  <Image src="~/assets/imgs/avatars/robot_3.png" margin="12" class="avatars" col="3" row="19" (tap)="onAvatar('robot_3.png')"></Image>
-
-                  <Image src="~/assets/imgs/avatars/robot_4.png" margin="12" class="avatars" col="0" row="20" (tap)="onAvatar('robot_4.png')"></Image>
-                  <Image src="~/assets/imgs/avatars/robot_5.png" margin="12" class="avatars" col="1" row="20" (tap)="onAvatar('robot_5.png')"></Image>
-                  <Image src="~/assets/imgs/avatars/robot_6.png" margin="12" class="avatars" col="2" row="20" (tap)="onAvatar('robot_6.png')"></Image>
-                  <Image src="~/assets/imgs/avatars/robot_7.png" margin="12" class="avatars" col="3" row="20" (tap)="onAvatar('robot_7.png')"></Image>
-
-                  <Image src="~/assets/imgs/avatars/robot_9.png" margin="12" class="avatars" col="0" row="21" (tap)="onAvatar('robot_9.png')"></Image>
-                  <Image src="~/assets/imgs/avatars/serial-killer.png" margin="12" class="avatars" col="1" row="21" (tap)="onAvatar('serial-killer.png')"></Image>
-                  <Image src="~/assets/imgs/avatars/smoked.png" margin="12" class="avatars" col="2" row="21" (tap)="onAvatar('smoked.png')"></Image>
-                  <Image src="~/assets/imgs/avatars/soldier_1.png" margin="12" class="avatars" col="3" row="21" (tap)="onAvatar('soldier_1.png')"></Image>
-
-                  <Image src="~/assets/imgs/avatars/squirtle.png" margin="12" class="avatars" col="0" row="22" (tap)="onAvatar('squirtle.png')"></Image>
-                  <Image src="~/assets/imgs/avatars/thief.png" margin="12" class="avatars" col="1" row="22" (tap)="onAvatar('thief.png')"></Image>
-                  <Image src="~/assets/imgs/avatars/user.png" margin="12" class="avatars" col="2" row="22" (tap)="onAvatar('user.png')"></Image>
-                  <Image src="~/assets/imgs/avatars/welder.png" margin="12" class="avatars" col="3" row="22" (tap)="onAvatar('welder.png')"></Image>
-
-                </GridLayout>
-              </CardView>
-
-            </StackLayout>
-
-
-
-          </GridLayout>
-        </ScrollView>
-      </TabContentItem>
-
-      <TabContentItem [backgroundColor]="tabList[4].backgroundColor">
-        <ScrollView>
-
-          <GridLayout rows="*,*,*" columns="*">
-            <StackLayout row="0" backgroundColor="#F1F1F1">
-
-              <Label text="Your Wins" class="h2 text-center p-t-20" horizontalAlignment="stretch" textWrap="true"></Label>
-              <Label text="redeem your wins within 72 hours to get perks" class="h4 text-center p-t-20 p-b-20" horizontalAlignment="stretch"></Label>
-
-            </StackLayout>
-            <StackLayout orientation="vertical" row="1" *ngIf="WINS &&  WINS.length>0 && showRedeem">
-
-              <CardView *ngFor="let data of WINS" (tap)="setGameId(data.game)">
-                <StackLayout orientation="horizontal" margin="12" class="text-center">
-                  <GridLayout rows="*,*,*" columns="*">
-                    <Label row="0" col="0" [text]="data.details.title" class="h4 text-center"></Label>
-                    <Label row="1" col="0" text="{{data.details.playersReady}}/{{data.details.playersMax}} players" class="h4 text-center"></Label>
-                    <Button row="2" column="0" text="redeem" width="100" (tap)="onRedeem(data.details.qr)"  *ngIf="data.details.prizeType=='coupon' &&  data.winner.redeemed<1"></Button>
-
-                  </GridLayout>
-                </StackLayout>
-
-              </CardView>
-
-            </StackLayout>
-
-            <StackLayout orientation="vertical" row="1" *ngIf="showRedeem">
-
-              <CardView>
-                <StackLayout orientation="horizontal" margin="12" class="text-center">
-                  <GridLayout rows="*,*,*" columns="*">
-
-                    <Label row="0" col="0" text="show this qr code to the  game host, when redeeming your win." class="h4 text-center"></Label>
-                    <Image [src]="redeemQR" margin="12" col="0" row="1"></Image>
-                    <Button row="2" column="0" text="close" width="100" (tap)="showRedeem=false" ></Button>
-
-                  </GridLayout>
-                </StackLayout>
-
-              </CardView>
-
-            </StackLayout>
-
-            <StackLayout orientation="vertical" row="1" *ngIf="WINS &&  WINS.length<1">
-              <Label text="No Wins Yet" class="h2 text-center p-t-20" horizontalAlignment="stretch" textWrap="true"></Label>
-
-
-            </StackLayout>
-          </GridLayout>
-        </ScrollView>
-
-      </TabContentItem>
-    </Tabs>
-  </GridLayout>
-
-  <!-- bottom tabs -->
-  <GridLayout height="auto" verticalAlignment="bottom" columns="*, *, *, *, *">
-
-    <!-- base layer -->
-    <AbsoluteLayout col="0" colSpan="5" verticalAlignment="bottom">
-      <GridLayout #tabBGContainer columns="auto, 10, auto, 10, auto">
-        <GridLayout #leftTabs col="0" colSpan="2" height="80" [backgroundColor]="tabContainer.backgroundColor" verticalAlignment="bottom" borderRadius="0 68 0 0"></GridLayout>
-        <GridLayout #centerPatch col="1" colSpan="3" height="40" [backgroundColor]="tabContainer.backgroundColor" verticalAlignment="bottom"></GridLayout>
-        <GridLayout #rightTabs col="3" colSpan="4" height="80" [backgroundColor]="tabContainer.backgroundColor" verticalAlignment="bottom" borderRadius="68 0 0 0"></GridLayout>
-
-        <!-- focus circle -->
-        <GridLayout #centerCircle col="1" colSpan="3" height="100" width="100" [backgroundColor]="tabList[currentTabIndex].backgroundColor" borderRadius="50" verticalAlignment="bottom" marginBottom="10">
-          <GridLayout verticalAlignment="center" horizontalAlignment="center" height="90" width="90" [backgroundColor]="tabContainer.focusColor" borderRadius="45"></GridLayout>
-        </GridLayout>
-
-      </GridLayout>
-    </AbsoluteLayout>
-
-    <!-- tab contents -->
-    <GridLayout #tabContents *ngFor="let item of tabList; let i = index" [col]="i" marginTop="20" (tap)="onBottomNavTap(i)" verticalAlignment="middle">
-      <Label class="fa-regular" [text]="item.text" verticalAlignment="middle" horizontalAlignment="center" [color]="item.color" fontSize="20"></Label>
-    </GridLayout>
-
-    <!-- pan layer -->
-    <GridLayout #dragCircle column="0" colSpan="5" (pan)="onCenterCirclePan($event)" verticalAlignment="center" horizontalAlignment="center" height="90" width="90" backgroundColor="transparent" borderRadius="45"></GridLayout>
-
-  </GridLayout>
+<GridLayout rows="*,auto" backgroundColor="#0F2832">
+	<StackLayout row="0" *ngIf="tab==0 && !DUSER">
+		<ScrollView orientation="vertical">
+		<GridLayout rows="*,*,*" column="*">
+			<StackLayout row="0" orientation="vertical">
+				<Image src="~/assets/homeBanner.png" loadMode="async" horizontalAlignment="stretch" stretch="aspectFit"></Image>
+			</StackLayout>
+			<StackLayout row="1" orientation="vertical" paddingTop="53">
+				<Button text="Go Win!" class="PB" (tap)="LOGIN()"></Button>
+			</StackLayout>
+		</GridLayout>
+		</ScrollView>
+	</StackLayout>
+
+	<StackLayout row="0" *ngIf="tab==0 && DUSER">
+	    <ScrollView>
+	        <StackLayout>
+	            <StackLayout>
+
+								<Image src="{{DUSER.profile.avatar}}" height="140" width="140" borderRadius="70" class="avatar-image"
+										margin="20 10" horizontalAlignment="center"></Image>
+
+									<StackLayout style="margin-top:-33px">
+										<Label height="50" width="100%" class="tC Uname" borderRadius="5" [text]="DUSER.profile.name || 'no user name'"></Label>
+									</StackLayout>
+
+	                <GridLayout columns="*, *, *" padding="0 10 10 10">
+	                    <StackLayout column="0" padding="0 5">
+	                        <Label height="50" width="100%" class="skeleton-light tC" borderRadius="5" text="Wins: {{DUSER.profile.wins}}"></Label>
+	                    </StackLayout>
+											<StackLayout column="1" padding="0 5">
+													<Label height="50" width="100%" class="skeleton-light tC" borderRadius="5" text="Loss: {{DUSER.profile.wins}}"></Label>
+											</StackLayout>
+											<StackLayout column="2" padding="0 5" *ngIf="DUSER.profile.winStreak>0">
+													<Label height="50" width="100%" class="skeleton-light tC" borderRadius="5" text="Streak: W+{{DUSER.profile.winStreak}}"></Label>
+											</StackLayout>
+											<StackLayout column="2" padding="0 5" *ngIf="DUSER.profile.winStreak==0 && DUSER.profile.lossStreak==0">
+													<Label height="50" width="100%" class="skeleton-light tC" borderRadius="5" text="Streak: W+{{DUSER.profile.winStreak}}"></Label>
+											</StackLayout>
+											<StackLayout column="2" padding="0 5" *ngIf="DUSER.profile.lossStreak>0">
+													<Label height="50" width="100%" class="skeleton-light tC" borderRadius="5" text="Streak: W+{{DUSER.profile.lossStreak}}"></Label>
+											</StackLayout>
+	                </GridLayout>
+
+
+									<GridLayout columns="*, *" padding="0 10 10 10">
+											<StackLayout column="0" padding="0 5">
+													<GridLayout rows="*,*" columns="*" class="skeleton-light " borderRadius="5">
+														<Label row="0" height="20" fontSize="10" width="100%" class="tC" text="BTC" paddingTop="10"></Label>
+														<Label row="1" height="40" width="100%" class="tC" text="{{DUSER.wallet[0].btc[0].btc_balance}}"></Label>
+													</GridLayout>
+											</StackLayout>
+											<StackLayout column="1" padding="0 5">
+												<GridLayout rows="*,*" columns="*" class="skeleton-light " borderRadius="5">
+													<Label row="0" height="20" fontSize="10" width="100%" class="tC" text="OWO" paddingTop="10"></Label>
+													<Label row="1" height="40" width="100%" class="tC" text="{{DUSER.wallet[0].owo[0].owo_balance}}"></Label>
+												</GridLayout>											</StackLayout>
+									</GridLayout>
+									<GridLayout rows="*,*" columns="*">
+
+										<StackLayout row="1" *ngIf="DACTIVEGAME">
+											<StackLayout>
+												<Label text="Active Game" class="tW"></Label>
+											</StackLayout>
+											<FlexboxLayout flexDirection="row" opacity="0.7" paddingTop="13" (tap)="onGame(DACTIVEGAME.challenge)">
+										<GridLayout rows="*, *, 2*" columns="100, *, 10" backgroundColor="rgba(255,255,255,0.2)" height="100" margin="2.5 15" padding="10 0" borderRadius="10">
+											<StackLayout row="0" rowSpan="3" col="0" backgroundColor="rgba(0,0,0,0.5)" height="80" width="80" verticalAlignment="center" horizontalAlignment="center" borderRadius="5">
+												<Image stretch="aspectFill" height="30" width="30" borderRadius="70" verticalAlignment="middle" src="{{DACTIVEGAME.details.p2Avatar}}"></Image>
+
+											</StackLayout>
+											<StackLayout row="0" col="1" height="14"  verticalAlignment="center" horizontalAlignment="left" borderRadius="5">
+												<Label text="opponent: {{DACTIVEGAME.details.p2}}" class="tAGD"></Label>
+											</StackLayout>
+											<StackLayout row="0" col="2"  height="14" width="40%" verticalAlignment="center" horizontalAlignment="left" borderRadius="5">
+												<Label text="game: {{DACTIVEGAME.details.game}}" class="tAGD"></Label>
+											</StackLayout>
+											<StackLayout row="1" col="1" height="12" width="40%" verticalAlignment="center" horizontalAlignment="left" borderRadius="5">
+												<Label text="amount: ${{DACTIVEGAME.details.amountUSD}} / {{DACTIVEGAME.details.game}}" class="tAGD"></Label>
+
+											</StackLayout>
+											<StackLayout row="2" col="1" height="40" width="100%" verticalAlignment="center" horizontalAlignment="left" borderRadius="5">
+												<Label text="{{DACTIVEGAME.details.rules}}" class="tAGD"></Label>
+
+											</StackLayout>
+										</GridLayout>
+									</FlexboxLayout>
+
+										</StackLayout>
+									</GridLayout>
+									<GridLayout rows="*,*" columns="*">
+										<StackLayout row="1" *ngIf="DHISTORY">
+											<FlexboxLayout flexDirection="row" opacity="0.7">
+										<GridLayout rows="*, *, 2*" columns="100, *, 10" backgroundColor="rgba(255,255,255,0.2)" height="100" margin="2.5 15" padding="10 0" borderRadius="10">
+											<StackLayout row="0" rowSpan="3" col="0" backgroundColor="rgba(0,0,0,0.5)" height="80" width="80" verticalAlignment="center" horizontalAlignment="center" borderRadius="5"></StackLayout>
+											<StackLayout row="0" col="1" backgroundColor="rgba(0,0,0,0.5)" height="14" width="20%" verticalAlignment="center" horizontalAlignment="left" borderRadius="5"></StackLayout>
+											<StackLayout row="1" col="1" backgroundColor="rgba(0,0,0,0.5)" height="12" width="40%" verticalAlignment="center" horizontalAlignment="left" borderRadius="5"></StackLayout>
+											<StackLayout row="2" col="1" backgroundColor="rgba(0,0,0,0.5)" height="40" width="100%" verticalAlignment="center" horizontalAlignment="left" borderRadius="5"></StackLayout>
+										</GridLayout>
+									</FlexboxLayout>
+
+										</StackLayout>
+									</GridLayout>
+
+
+	            </StackLayout>
+
+	        </StackLayout>
+	    </ScrollView>
+	</StackLayout>
+
+	<StackLayout row="0" *ngIf="tab==1 && DUSER">
+		    <ScrollView #scrollview height="90%">
+		            <StackLayout *ngIf="!DCHAT">
+									<Label text="no chats yet" class="tW"></Label>
+								</StackLayout>
+								<StackLayout *ngIf="DCHAT" orientation="vertical">
+									<RadListView [items]="DCHAT" height="900" itemReorder="true">
+											<ng-template let-item="item">
+															<StackLayout orientation="horizontal" padding="5" marginBottom="2" (tap)="onProfile(item.fromID)">
+																<GridLayout columns="30,auto" rows="*,*" class="msg">
+
+																	<Image row="0" column="0" class="authorimg" stretch="aspectFill" height="30" width="30" borderRadius="70" verticalAlignment="middle" src="{{item.fromAvatar}}"></Image>
+																	<Label row="0" column="1" text="{{item.message}}" class="tM" textWrap="true" verticalAlignment="middle" horizontalAlignment="stretch"  paddingLeft="15" ></Label>
+																	<Label row="1" colspan="2" class="tDate" verticalAlignment="bottom" horizontalAlignment="left">
+																		<FormattedString>
+																			<Span fontWeight="bold" text="{{item.from}}:"></Span>
+																			<Span fontWeight="normal" text=" {{item.date | date:'short'}}"></Span>
+																		</FormattedString>
+																	</Label>
+
+																</GridLayout>
+
+															</StackLayout>
+											</ng-template>
+									</RadListView>
+
+								</StackLayout>
+
+		    </ScrollView>
+		    <StackLayout height="10%">
+		        <GridLayout columns="*,auto" style="padding: 10">
+		            <TextField #textfield class="chatField" row="0" col="0" [(ngModel)]="message"></TextField>
+		            <Button #btn class="CB" row="0" col="1" text="send" (tap)=CHAT(message)></Button>
+		        </GridLayout>
+		    </StackLayout>
+	</StackLayout>
+
+	<StackLayout row="0" *ngIf="tab==2 && DUSER">
+				<ScrollView>
+								<GridLayout rows="*,*,*" colums="*">
+									<StackLayout row="0">
+										<Label text="FREE Tournaments" class="tH"></Label>
+									</StackLayout>
+
+									<StackLayout row="1" paddingTop="13">
+											<Label width="80%" class="skeleton-light tD" borderRadius="5" textWrap="true" text="1st to win x number of games in a row wins the tournament"></Label>
+									</StackLayout>
+
+								</GridLayout>
+				</ScrollView>
+	</StackLayout>
+
+	<StackLayout row="0" *ngIf="tab==3">
+				<ScrollView>
+								<GridLayout rows="*,*,*" colums="*">
+									<StackLayout row="0">
+										<Label text="Game Referee" class="tH"></Label>
+									</StackLayout>
+
+									<StackLayout row="1" paddingTop="13">
+											<Label width="80%" class="skeleton-light tD" borderRadius="5" textWrap="true" text="Earn bitcoin... Join players in an xbox or playstation chatroom and monitor their game. Settle disputs if needed"></Label>
+									</StackLayout>
+									<StackLayout row="2">
+										<Label text="available soon" class="tH"></Label>
+									</StackLayout>
+
+								</GridLayout>
+				</ScrollView>
+	</StackLayout>
+
+	<StackLayout row="0" *ngIf="tab==4 && DUSER">
+				<ScrollView>
+					<GridLayout rows="*,*" columns="*" paddingTop="33">
+
+						<StackLayout row="0">
+							<GridLayout rows="*,*,*" colums="*">
+								<StackLayout row="0">
+									<Label text="Wallet" class="tH"></Label>
+								</StackLayout>
+
+								<StackLayout row="1" paddingTop="13">
+										<Label width="80%" class="skeleton-light tD" borderRadius="5" textWrap="true" text="Deposit/Withdraw Bitcoin or OWO"></Label>
+								</StackLayout>
+								<StackLayout row="2" *ngIf="!DUSER">
+									<Label text="login to access your wallet" class="tH"></Label>
+								</StackLayout>
+
+							</GridLayout>
+						</StackLayout>
+						<StackLayout row="1" paddingTop="33">
+							<GridLayout rows="*,*,*,*,*,*" columns="*,*">
+								<StackLayout row="0" colspan="2" paddingBottom="10">
+									<Label text="BTC" class="bitcoinLabel" *ngIf="!showBTCQR"></Label>
+									<Label text="close" class="bitcoinLabel" *ngIf="showBTCQR" (tap)="showBTCQR=false"></Label>
+								</StackLayout>
+								<StackLayout row="1" colspan="2" paddingBottom="23" *ngIf="!showBTCQR">
+									<Label text="{{DUSER.wallet[0].btc[0].btc_balance}}" class="tW"></Label>
+								</StackLayout>
+
+								<StackLayout row="2" column="0" *ngIf="!showBTCQR">
+									<Button text="Deposit" class="depositBitcoin" (tap)="showBTCQR=true"></Button>
+								</StackLayout>
+								<StackLayout row="2" column="1" *ngIf="!showBTCQR">
+									<Button text="Withdraw" class="withdrawBitcoin" (tap)="onWithdraw(1)"></Button>
+								</StackLayout>
+								<StackLayout row="2" colspan="2" *ngIf="showBTCQR">
+									<Image src="{{DUSER.wallet[0].btc[0].btc_qr}}" loadMode="async" horizontalAlignment="stretch" (tap)="onCopy(DUSER.wallet[0].btc[0].btc_address)"></Image>
+								</StackLayout>
+
+								<StackLayout row="3" colspan="2" paddingBottom="10" paddingTop="33">
+									<Label text="OWO" class="owoLabel" *ngIf="!showOWOQR"></Label>
+									<Label text="close" class="bitcoinLabel" *ngIf="showOWOQR" (tap)="showOWOQR=false"></Label>
+
+								</StackLayout>
+								<StackLayout row="4" colspan="2" paddingBottom="23" *ngIf="!showOWOQR">
+									<Label text="{{DUSER.wallet[0].owo[0].owo_balance}}" class="tW"></Label>
+								</StackLayout>
+								<StackLayout row="5" column="0" *ngIf="!showOWOQR">
+									<Button text="Deposit" class="depositOWO" (tap)="showOWOQR=true"></Button>
+								</StackLayout>
+								<StackLayout row="5" column="1" *ngIf="!showOWOQR">
+									<Button text="Withdraw" class="withdrawOWO" (tap)="onWithdraw(2)"></Button>
+								</StackLayout>
+								<StackLayout row="5" colspan="2" *ngIf="showOWOQR">
+									<Image src="{{DUSER.wallet[0].owo[0].owo_qr}}" loadMode="async" horizontalAlignment="stretch" stretch="aspectFit" (tap)="onCopy(DUSER.wallet[0].owo[0].owo_address)"></Image>
+								</StackLayout>
+
+							</GridLayout>
+						</StackLayout>
+					</GridLayout>
+
+
+
+				</ScrollView>
+	</StackLayout>
+
+	<BottomBar row="1" (tabSelected)="tabSelected($event)"></BottomBar>
 
 </GridLayout>

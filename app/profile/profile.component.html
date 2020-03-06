@@ -1,0 +1,86 @@
+<ActionBar title="Bottombar" backgroundColor="#0D0D12">
+	<StackLayout orientation="vertical">
+		<!-- Header Start -->
+		<Label horizontalAlignment="center" letterSpacing="0.2">
+			<FormattedString>
+				<Span color="#F1A110" fontSize="24" fontWeight="bold" text="GAMER"></Span>
+				<Span color="#fff" fontSize="21" fontWeight="normal" text="HOLIC"></Span>
+			</FormattedString>
+		</Label>
+		<!-- Header End -->
+	</StackLayout>
+</ActionBar>
+
+<GridLayout rows="*,auto" backgroundColor="#0F2832">
+
+  <StackLayout row="0">
+	    <ScrollView>
+	        <StackLayout *ngIf="DUSER && !showChallenge && !showChat">
+	            <StackLayout>
+
+								<Image src="{{DUSER.profile.avatar}}" height="140" width="140" borderRadius="70" class="avatar-image"
+										margin="20 10" horizontalAlignment="center"></Image>
+
+									<StackLayout style="margin-top:-33px">
+										<Label height="50" width="100%" class="tC Uname" borderRadius="5" [text]="DUSER.profile.name || 'no user name'"></Label>
+									</StackLayout>
+
+	                <GridLayout columns="*, *, *" padding="0 10 10 10">
+	                    <StackLayout column="0" padding="0 5">
+	                        <Label height="50" width="100%" class="skeleton-light tC" borderRadius="5" text="Wins: 0"></Label>
+	                    </StackLayout>
+											<StackLayout column="1" padding="0 5">
+													<Label height="50" width="100%" class="skeleton-light tC" borderRadius="5" text="Loss: 0"></Label>
+											</StackLayout>
+											<StackLayout column="2" padding="0 5">
+													<Label height="50" width="100%" class="skeleton-light tC" borderRadius="5" text="Streak: W+2"></Label>
+											</StackLayout>
+	                </GridLayout>
+
+									<GridLayout columns="*, *" padding="0 10 10 10">
+											<StackLayout column="0" padding="0 5">
+													<Label height="50" width="100%" class="PB tC" borderRadius="5" text="Challenge" (tap)="onChallenge()" ></Label>
+											</StackLayout>
+											<StackLayout column="1" padding="0 5">
+													<Label height="50" width="100%" class="CPB tC" borderRadius="5" text="Chat" (tap)="showChat=true"></Label>
+											</StackLayout>
+									</GridLayout>
+
+									<GridLayout rows="*,*" columns="*">
+										<StackLayout row="0" *ngIf="!DHISTORY">
+											<Label text="no games played" class="tW"></Label>
+										</StackLayout>
+										<StackLayout row="1" *ngIf="DHISTORY">
+											<FlexboxLayout flexDirection="row" opacity="0.7">
+										<GridLayout rows="*, *, 2*" columns="100, *, 10" backgroundColor="rgba(255,255,255,0.2)" height="100" margin="2.5 15" padding="10 0" borderRadius="10">
+											<StackLayout row="0" rowSpan="3" col="0" backgroundColor="rgba(0,0,0,0.5)" height="80" width="80" verticalAlignment="center" horizontalAlignment="center" borderRadius="5"></StackLayout>
+											<StackLayout row="0" col="1" backgroundColor="rgba(0,0,0,0.5)" height="14" width="20%" verticalAlignment="center" horizontalAlignment="left" borderRadius="5"></StackLayout>
+											<StackLayout row="1" col="1" backgroundColor="rgba(0,0,0,0.5)" height="12" width="40%" verticalAlignment="center" horizontalAlignment="left" borderRadius="5"></StackLayout>
+											<StackLayout row="2" col="1" backgroundColor="rgba(0,0,0,0.5)" height="40" width="100%" verticalAlignment="center" horizontalAlignment="left" borderRadius="5"></StackLayout>
+										</GridLayout>
+									</FlexboxLayout>
+
+										</StackLayout>
+									</GridLayout>
+
+
+	            </StackLayout>
+	        </StackLayout>
+
+          <StackLayout *ngIf="DUSER && showChallenge && !showChat">
+              <GridLayout rows="*,*,*" columns="*">
+                <StackLayout *ngIf="!game" row="0">
+
+                  <Button text="select game" class="btn btn-primary"></Button>
+                </StackLayout>
+              </GridLayout>
+
+          </StackLayout>
+
+          <StackLayout *ngIf="DUSER && !showChallenge && showChat" >
+            <Label text="chat area" (tap)="showChat=false"></Label>
+          </StackLayout>
+	    </ScrollView>
+	</StackLayout>
+
+</GridLayout>
