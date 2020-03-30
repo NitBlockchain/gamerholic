@@ -4,3 +4,9 @@ of writing your own CSS rules. For a full list of class names in the theme
 refer to http://docs.nativescript.org/ui/theme.
 */
 @import '~nativescript-theme-core/css/core.light.css';
+
+.closeButton{
+  color: #7D8874;
+  background-color:#7D8874;
+  text-align: center;
+}

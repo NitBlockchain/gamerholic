@@ -26,6 +26,24 @@ border-radius: 8px;
 width:60%;
 font-size:18px;
 }
+.PB2{
+  /* Rectangle 4: */
+background: #386610;
+color:#FFF;
+padding:44px;
+border-radius: 8px;
+width:60%;
+font-size:18px;
+}
+.back{
+  /* Rectangle 4: */
+background: #535552;
+color:#FFF;
+padding:44px;
+border-radius: 8px;
+width:60%;
+font-size:18px;
+}
 /*depositbitcoin*/
 .depositBitcoin{
   /* Rectangle 4: */

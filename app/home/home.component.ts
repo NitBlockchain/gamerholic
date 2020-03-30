@@ -38,12 +38,15 @@ export class HomeComponent implements OnInit {
 
     DLOCATION: any
     DUSER: any
+    DREF: any
     DGAMES: any
     DSTORE: any
     DHISTORY: any
     DACTIVEGAME: any
     DCHAT: any
-
+    DTOURNYS: any
+    DREFSONLINE: any
+    DSPONSORWALLETS: any
     device: any
     deviceModel: any
     deviceManufacturer: any
@@ -58,6 +61,8 @@ export class HomeComponent implements OnInit {
     withdrawAmount: any
     withdrawAddress: any
 
+    showRefs: any
+    showWallet: any
     constructor(
         private page: Page, private zone: NgZone, private cd: ChangeDetectorRef, public _game: GameProvider, private router: RouterExtensions,
     ) {
@@ -67,6 +72,8 @@ export class HomeComponent implements OnInit {
         this.showBTCQR = false
         this.showOWOQR = false
         this.tab = 0
+        this.showRefs = false
+        this.showWallet = false
     }
 
     ngOnInit(): void {
@@ -101,6 +108,33 @@ export class HomeComponent implements OnInit {
 
                             this.DUSER = jordi.payload[0]
                             this.DACTIVEGAME = jordi.payload[1]
+                            this.DREF = jordi.payload[2]
+                            this.DREFSONLINE = jordi.payload[3]
+                            this.DSPONSORWALLETS = jordi.payload[4]
+                            // console.log(this.DREF)
+                            this.cd.detectChanges();
+
+                        })
+
+
+                    } else {
+
+
+                    }
+                })
+
+    }
+
+    gTOURNYS() {
+
+        this.$game.gTOURNYS(this.token, this.user)
+            .subscribe(
+                (jordi: any) => {
+                    if (jordi.success) {
+
+                        this.zone.run(() => {
+
+                            this.DTOURNYS = jordi.payload[0]
 
                             // console.log(this.DUSER)
                             this.cd.detectChanges();
@@ -154,6 +188,93 @@ export class HomeComponent implements OnInit {
 
                     })
                 })
+    }
+
+    async refOnline() {
+
+        dialogs.action({
+            message: "Referee Game",
+            cancelButtonText: "cancel",
+            actions: ["NBA 2k", "Madden", "FIFA", "COD", "Marvel vs Capcom", "Fight Night"]
+        }).then(async (result: any) => {
+
+            this.$game.refOnline(this.token, this.user, result)
+                .subscribe(
+                    (jordi: any) => {
+
+                        this.zone.run(() => {
+
+                            if (jordi.success) {
+                                this.pop(jordi.message, 'success')
+                            } else {
+                                this.pop(jordi.message, 'error')
+
+                            }
+                            this.cd.detectChanges();
+
+                        })
+                    })
+        })
+    }
+
+    async createWALLET() {
+
+        let game;
+        let amount;
+        let split;
+
+        dialogs.action({
+            message: "Gamer Split",
+            cancelButtonText: "cancel",
+            actions: ["25%", "35%", "45%", "50%", "60%", "75%"]
+        }).then(async (result: any) => {
+
+            split = result
+            dialogs.action({
+                message: "What Game",
+                cancelButtonText: "cancel",
+                actions: ["NBA 2k", "Madden", "FIFA", "COD", "Marvel vs Capcom", "Super Smash"]
+            }).then(async (res: any) => {
+
+                game = res
+
+                dialogs.prompt({
+                    title: "Wallet Amount",
+                    message: "how much $$ are you adding to wallet?",
+                    okButtonText: "create wallet",
+                    cancelButtonText: "Cancel",
+                    defaultText: null,
+                    inputType: dialogs.inputType.text
+                }).then(async (r) => {
+
+                    if (r.result) {
+
+                        this.$game.createWALLET(this.token, this.user, split, game, r.result)
+                            .subscribe(
+                                (jordi: any) => {
+
+                                    this.zone.run(() => {
+
+                                        if (jordi.success) {
+                                            this.pop(jordi.message, 'success')
+                                        } else {
+                                            this.pop(jordi.message, 'error')
+
+                                        }
+                                        this.cd.detectChanges();
+
+                                    })
+                                })
+                    } else {
+                        this.pop("whats the wallet amount?", "error")
+                    }
+
+                });
+
+
+            })
+
+        })
     }
 
     async onProfile(user: any) {
@@ -504,6 +625,20 @@ export class HomeComponent implements OnInit {
 
         })
 
+    }
+
+    async refChange() {
+        console.log("reached")
+        if (this.showRefs == false) {
+            this.showRefs = true
+            console.log("true")
+
+        } else {
+            console.log("false")
+
+            this.showRefs = false
+        }
+        this.pop("trying", 'success')
     }
     public onCopy(text: any): void {
         setText(text)

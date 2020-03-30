@@ -161,13 +161,58 @@
 
 	<StackLayout row="0" *ngIf="tab==2 && DUSER">
 				<ScrollView>
-								<GridLayout rows="*,*,*" colums="*">
+								<GridLayout rows="*,*,*,*" colums="*" *ngIf="!showWallet">
 									<StackLayout row="0">
-										<Label text="FREE Tournaments" class="tH"></Label>
+										<Label text="Sponsored Wallets" class="tH"></Label>
 									</StackLayout>
 
 									<StackLayout row="1" paddingTop="13">
-											<Label width="80%" class="skeleton-light tD" borderRadius="5" textWrap="true" text="1st to win x number of games in a row wins the tournament"></Label>
+											<Label width="80%" class="skeleton-light tD" borderRadius="5" textWrap="true" text="Sponsor a skilled gamer, they play with your funds you earn a % of their winnings"></Label>
+									</StackLayout>
+									<StackLayout row="2" paddingTop="23">
+										<Button text="Create Wallet" class="PB" (tap)="createWALLET()"></Button>
+									</StackLayout>
+									<StackLayout row="3" paddingTop="23">
+										<Button text="View Wallets" class="PB2" (tap)="showWallet=true"></Button>
+									</StackLayout>
+
+								</GridLayout>
+
+								<GridLayout rows="*,*,*,*" colums="*" *ngIf="showWallet">
+									<StackLayout row="0">
+										<Label text="Sponsored Wallets" class="tH"></Label>
+									</StackLayout>
+
+									<StackLayout row="1" paddingTop="13">
+											<Label width="80%" class="skeleton-light tD" borderRadius="5" textWrap="true" text="Available Sponsor Wallets"></Label>
+									</StackLayout>
+									<StackLayout *ngIf="!DSPONSORWALLETS" row="2">
+										<Label text="no sponsor wallets" class="tW"></Label>
+									</StackLayout>
+									<StackLayout *ngIf="DSPONSORWALLETS" orientation="vertical" row="2">
+										<RadListView [items]="DSPONSORWALLETS" height="900" itemReorder="true">
+												<ng-template let-item="item">
+																<StackLayout orientation="horizontal" padding="5" marginBottom="2" (tap)="onProfile(item.fromID)">
+																	<GridLayout columns="30,auto" rows="*,*" class="msg">
+
+																		<Image row="0" column="0" class="authorimg" stretch="aspectFill" height="30" width="30" borderRadius="70" verticalAlignment="middle" src="{{item.sponsorAvatar}}"></Image>
+																		<Label row="0" column="1" text="{{item.sponsorName}}" class="tM" textWrap="true" verticalAlignment="middle" horizontalAlignment="stretch"  paddingLeft="15" ></Label>
+																		<Label row="1" colspan="2" class="tDate" verticalAlignment="bottom" horizontalAlignment="left">
+																			<FormattedString>
+																				<Span fontWeight="bold" text="Game: {{item.game}}:"></Span>
+																				<Span fontWeight="normal" text="Split: {{item.split}}% | Amount ${{item.amount}}"></Span>
+																			</FormattedString>
+																		</Label>
+
+																	</GridLayout>
+
+																</StackLayout>
+												</ng-template>
+										</RadListView>
+
+									</StackLayout>
+									<StackLayout row="3" paddingTop="23">
+										<Button text="Back" class="back" (tap)="showWallet=false"></Button>
 									</StackLayout>
 
 								</GridLayout>
@@ -176,16 +221,57 @@
 
 	<StackLayout row="0" *ngIf="tab==3">
 				<ScrollView>
-								<GridLayout rows="*,*,*" colums="*">
+								<GridLayout rows="*,*,*,*" colums="*" *ngIf="!showRefs">
 									<StackLayout row="0">
 										<Label text="Game Referee" class="tH"></Label>
 									</StackLayout>
 
 									<StackLayout row="1" paddingTop="13">
-											<Label width="80%" class="skeleton-light tD" borderRadius="5" textWrap="true" text="Earn bitcoin... Join players in an xbox or playstation chatroom and monitor their game. Settle disputs if needed"></Label>
+											<Label width="80%" class="skeleton-light tD" borderRadius="5" textWrap="true" text="Earn 5% of the game amount as a  referee... Join players in an xbox or playstation chatroom and monitor their game. Settle disputes if needed"></Label>
 									</StackLayout>
-									<StackLayout row="2">
-										<Label text="available soon" class="tH"></Label>
+									<StackLayout row="2" paddingTop="23">
+										<Button text="Activate" class="PB" (tap)="refOnline()" *ngIf="!DREF"></Button>
+										<Button text="Go Online" class="PB2" (tap)="refOnline()" *ngIf="DREF && DREF.online<1"></Button>
+										<Button text="Go Offline" class="PB" (tap)="refOnline()" *ngIf="DREF && DREF.online>0"></Button>
+									</StackLayout>
+									<StackLayout row="3" paddingTop="23">
+										<Button text="View Referee's" class="PB" (tap)="showRefs=true"></Button>
+									</StackLayout>
+
+								</GridLayout>
+
+								<GridLayout rows="*,*,*,*" colums="*" *ngIf="showRefs">
+									<StackLayout row="0">
+										<Label text="Refs Ready Online" class="tH" (tap)="refChange()"></Label>
+									</StackLayout>
+
+									<StackLayout row="1" paddingTop="13">
+											<Label width="80%" class="skeleton-light tD" borderRadius="5" textWrap="true" text="Join a ref in a chatroom on xbox or playstation to have your game monitored. If there is a score dispute, the ref will resolve"></Label>
+									</StackLayout>
+									<StackLayout *ngIf="!DREFSONLINE" row="2">
+										<Label text="no referee's online" class="tW"></Label>
+									</StackLayout>
+									<StackLayout *ngIf="DREFSONLINE" orientation="vertical">
+										<RadListView [items]="DREFSONLINE" height="900" itemReorder="true">
+												<ng-template let-item="item">
+																<StackLayout orientation="horizontal" padding="5" marginBottom="2" (tap)="onProfile(item.fromID)">
+																	<GridLayout columns="30,auto" rows="*,*" class="msg">
+
+																		<Image row="0" column="0" class="authorimg" stretch="aspectFill" height="30" width="30" borderRadius="70" verticalAlignment="middle" src="{{item.profile.avatar}}"></Image>
+																		<Label row="0" column="1" text="{{item.profile.name}}" class="tM" textWrap="true" verticalAlignment="middle" horizontalAlignment="stretch"  paddingLeft="15" ></Label>
+																		<Label row="1" colspan="2" class="tDate" verticalAlignment="bottom" horizontalAlignment="left">
+																			<FormattedString>
+																				<Span fontWeight="bold" text="Game: {{item.profile.game}}"></Span>
+																				<Span fontWeight="normal" text="Disputes: {{item.profile.disputes}}"></Span>
+																			</FormattedString>
+																		</Label>
+
+																	</GridLayout>
+
+																</StackLayout>
+												</ng-template>
+										</RadListView>
+
 									</StackLayout>
 
 								</GridLayout>

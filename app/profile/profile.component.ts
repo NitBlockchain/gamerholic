@@ -42,8 +42,10 @@ export class ProfileComponent implements OnInit {
     rules: any
     console: any
     type: any
+    message: any
 
     DUSER: any
+    DCHAT: any
 
     constructor(
         private page: Page, private zone: NgZone, private cd: ChangeDetectorRef, public _game: GameProvider, private router: RouterExtensions, private route: ActivatedRoute,
@@ -74,9 +76,9 @@ export class ProfileComponent implements OnInit {
 
                         this.zone.run(() => {
 
-                            this.DUSER = jordi.payload
-
-                            console.log(this.DUSER)
+                            this.DUSER = jordi.payload[0]
+                            this.DCHAT = jordi.payload[1].messages
+                            // console.log(jordi)
                             this.cd.detectChanges();
 
                         })
@@ -86,6 +88,98 @@ export class ProfileComponent implements OnInit {
 
 
                     }
+                })
+    }
+
+    CHAT(message: any) {
+
+        if (!this.DUSER.profile.name) {
+            this.pop('complete your profile to chat', 'error')
+            setTimeout(() => {
+                this.onEdit()
+            }, 2000)
+        } else if (message) {
+
+            this.$game.onChatDirect(this.token, this.user, this.profile, message, null)
+                .subscribe(
+                    (jordi: any) => {
+
+                        if (jordi.success) {
+                            this.message = ''
+                            this.gPROFILE()
+                        }
+
+                    })
+        }
+
+    }
+    async onEdit() {
+
+        dialogs.action({
+            message: "Edit Profile",
+            cancelButtonText: "cancel",
+            actions: ["edit user name", "edit email"]
+        }).then((result) => {
+            // console.log("Dialog result: " + result);
+            if (result == "edit user name") {
+
+                dialogs.prompt({
+                    title: "Edit User Name",
+                    message: "choose a suitable user name",
+                    okButtonText: "save",
+                    cancelButtonText: "Cancel",
+                    defaultText: null,
+                    inputType: dialogs.inputType.text
+                }).then((r) => {
+
+                    if (r.result) {
+                        this.onEditComplete(r.text, 1)
+
+                    }
+
+                });
+
+            } else if (result == "edit email") {
+                //Do action2
+                dialogs.prompt({
+                    title: "Edit Email",
+                    message: "a confirmation code will be sent to your email address",
+                    okButtonText: "save",
+                    cancelButtonText: "Cancel",
+                    defaultText: null,
+                    inputType: dialogs.inputType.text
+                }).then((r) => {
+                    if (r.result) {
+                        this.onEditComplete(r.text, 2)
+
+                    }
+
+                });
+            }
+        });
+
+    }
+
+    onEditComplete(text: string, type: number) {
+
+        this.$game.onEdit(this.token, this.user, text, type)
+            .subscribe(
+                (jordi: any) => {
+                    if (jordi.success) {
+
+                        this.zone.run(() => {
+                            this.pop(jordi.message, 'success')
+
+                            this.gPROFILE()
+                            this.cd.detectChanges();
+
+                        })
+
+                    } else {
+
+                        this.pop(jordi.message, 'error')
+                    }
+
                 })
     }
 

@@ -6,7 +6,7 @@
   "readme": "None",
   "repository": "<fill-your-repository-here>",
   "nativescript": {
-    "id": "cheap.grabbit",
+    "id": "com.gamerholic",
     "tns-android": {
       "version": "6.3.1"
     },

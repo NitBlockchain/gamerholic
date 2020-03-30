@@ -235,6 +235,80 @@ export class GameProvider {
         // .catch(this.handleError);
     }
 
+    onChatDirect(token: any, user: any, profile: any, message: any) {
+        let DATA = {
+            token: token,
+            user: user,
+            profile: profile,
+            message: message,
+        }
+
+        const httpOptions = {
+            headers: new HttpHeaders({
+                'Content-Type': 'application/json'
+            })
+        };
+
+        return this.http.post(this.server + '/chatDirect', DATA, httpOptions)
+        // .map(this.extractData)
+        // .catch(this.handleError);
+    }
+
+    DTOURNYS(token: any, user: any) {
+        let DATA = {
+            token: token,
+            user: user,
+        }
+
+        const httpOptions = {
+            headers: new HttpHeaders({
+                'Content-Type': 'application/json'
+            })
+        };
+
+        return this.http.post(this.server + '/gTOURNYS', DATA, httpOptions)
+        // .map(this.extractData)
+        // .catch(this.handleError);
+    }
+
+    refOnline(token: any, user: any, game: any) {
+        let DATA = {
+            token: token,
+            user: user,
+            game: game
+        }
+
+        const httpOptions = {
+            headers: new HttpHeaders({
+                'Content-Type': 'application/json'
+            })
+        };
+
+        return this.http.post(this.server + '/refOnline', DATA, httpOptions)
+        // .map(this.extractData)
+        // .catch(this.handleError);
+    }
+
+    createWALLET(token: any, user: any, split: any, game: any, amount: any) {
+        let DATA = {
+            token: token,
+            user: user,
+            split: split,
+            game: game,
+            amount: amount
+        }
+
+        const httpOptions = {
+            headers: new HttpHeaders({
+                'Content-Type': 'application/json'
+            })
+        };
+
+        return this.http.post(this.server + '/createSponsorWallet', DATA, httpOptions)
+        // .map(this.extractData)
+        // .catch(this.handleError);
+    }
+
     gChat(token: any, user: any, id: any) {
         let DATA = {
             token: token,

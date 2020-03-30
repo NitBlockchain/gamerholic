@@ -13,9 +13,9 @@
 
 <GridLayout rows="*,auto" backgroundColor="#0F2832">
 
-  <StackLayout row="0">
+  <StackLayout row="0" *ngIf="DUSER && !showChallenge && !showChat">
 	    <ScrollView>
-	        <StackLayout *ngIf="DUSER && !showChallenge && !showChat">
+	        <StackLayout>
 	            <StackLayout>
 
 								<Image src="{{DUSER.profile.avatar}}" height="140" width="140" borderRadius="70" class="avatar-image"
@@ -77,10 +77,53 @@
 
           </StackLayout>
 
-          <StackLayout *ngIf="DUSER && !showChallenge && showChat" >
-            <Label text="chat area" (tap)="showChat=false"></Label>
-          </StackLayout>
 	    </ScrollView>
 	</StackLayout>
+
+	<StackLayout row="0" *ngIf="DUSER && !showChallenge && showChat">
+				<ScrollView #scrollview height="90%" row="0">
+					<StackLayout  orientation="vertical">
+						<Button text="close" class="btn closeButton" (tap)="showChat=false"></Button>
+
+					</StackLayout>
+
+								<StackLayout *ngIf="!DCHAT">
+									<Label text="no chats yet" class="tW"></Label>
+								</StackLayout>
+								<StackLayout>
+
+								</StackLayout>
+								<StackLayout *ngIf="DCHAT" orientation="vertical">
+									<RadListView [items]="DCHAT" height="900" itemReorder="true">
+											<ng-template let-item="item">
+															<StackLayout orientation="horizontal" padding="5" marginBottom="2" (tap)="showChat=false">
+																<GridLayout columns="30,auto" rows="*,*" class="msg">
+
+																	<Image row="0" column="0" class="authorimg" stretch="aspectFill" height="30" width="30" borderRadius="70" verticalAlignment="middle" src="{{item.fromAvatar}}"></Image>
+																	<Label row="0" column="1" text="{{item.message}}" class="tM" textWrap="true" verticalAlignment="middle" horizontalAlignment="stretch"  paddingLeft="15" ></Label>
+																	<Label row="1" colspan="2" class="tDate" verticalAlignment="bottom" horizontalAlignment="left">
+																		<FormattedString>
+																			<Span fontWeight="bold" text="{{item.from}}:"></Span>
+																			<Span fontWeight="normal" text=" {{item.date | date:'short'}}"></Span>
+																		</FormattedString>
+																	</Label>
+
+																</GridLayout>
+
+															</StackLayout>
+											</ng-template>
+									</RadListView>
+
+								</StackLayout>
+
+				</ScrollView>
+				<StackLayout height="10%" row="1">
+						<GridLayout columns="*,auto" style="padding: 10">
+								<TextField #textfield class="chatField" row="0" col="0" [(ngModel)]="message"></TextField>
+								<Button #btn class="CB" row="0" col="1" text="send" (tap)=CHAT(message)></Button>
+						</GridLayout>
+				</StackLayout>
+	</StackLayout>
+
 
 </GridLayout>
